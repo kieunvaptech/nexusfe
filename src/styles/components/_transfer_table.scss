@@ -1,0 +1,122 @@
+.role_style_info_user {
+  .ant-col.ant-col-4.ant-form-item-label.ant-form-item-label-left {
+    padding-top: 1px;
+  }
+}
+
+.modal_transferTable {
+  .ant-modal-body {
+    padding-top: 10px;
+  }
+}
+
+.tree_css {
+  .ant-tree-list-holder-inner {
+    padding-left: 70px;
+    font-size: 14px;
+    line-height: 35px;
+  }
+}
+
+.input_search_transferTable {
+  padding: 0px;
+  border: 1px solid #4444;
+  border-radius: 5px;
+  padding-right: 5px;
+  padding-bottom: 3px;
+  margin-bottom: 10px;
+}
+
+.anticon.anticon-close.ant-notification-notice-close-icon {
+  display: none;
+}
+
+.body__item:hover {
+  background-color: #e5f0fa;
+}
+
+.role-access-tree {
+  .ant-tree-switcher {
+    line-height: 18px;
+  }
+}
+
+.transfer-data {
+  display: flex;
+  align-items: stretch;
+  .action-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 20%;
+    margin-top: 100px;
+    margin-bottom: 50px;
+    .action-item {
+      border-radius: 15%;
+      margin: auto;
+    }
+    &.disabled {
+      img {
+        cursor: not-allowed;
+      }
+    }
+  }
+  .data-left {
+    width: 40%;
+    &__body {
+      max-height: 320px;
+      min-height: 300px;
+      overflow: auto;
+    }
+    &__title {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 19px;
+      padding: 10px 20px 10px 25px;
+      background-color: #5383c3;
+      color: white;
+      text-align: left;
+    }
+    .body__item {
+      display: flex;
+      padding: 5px;
+    }
+  }
+  .data-right {
+    width: 40%;
+    &__body {
+      max-height: 320px;
+      min-height: 300px;
+      overflow: auto;
+    }
+    &__title {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 19px;
+      padding: 10px 20px 10px 25px;
+      background-color: #5383c3;
+      color: white;
+      text-align: left;
+    }
+    .body__item {
+      display: flex;
+      padding: 5px;
+    }
+  }
+}
+
+.from,
+.to {
+  display: flex;
+  width: 80%;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.data_left,
+.data_right {
+  border: 1px solid #b9bfc5;
+  border-radius: 4px;
+  min-height: 400px;
+  max-height: 400px;
+}

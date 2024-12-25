@@ -1,0 +1,33 @@
+.ksdb-navi {
+  font-size: $font-16;
+  font-weight: 500;
+  line-height: 18px;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  span:not(.last-item) {
+    color: $gray-navi;
+  }
+  .item {
+    cursor: pointer;
+    position: relative;
+    margin-right: 25px;
+    &:hover {
+      color: $black-444;
+    }
+    &:after {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-top: 1.5px solid #bdbdbd;
+      border-right: 1.5px solid #bdbdbd;
+      transform: rotate(45deg);
+      position: absolute;
+      left: calc(100% + 8px);
+      top: 5px;
+    }
+  }
+  .last-item {
+    margin-left: 3px;
+    color: $black-444;
+  }
+}

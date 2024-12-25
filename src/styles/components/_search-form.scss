@@ -1,0 +1,20 @@
+.ksdb-searchForm {
+    display: flex;
+    flex-direction: column;
+    &__top {
+        .form-element {
+            label {
+                color: $black-444;
+                font-size: $base-font;
+                span {
+                    margin-right: 5px;
+                    white-space: normal;
+                }
+            }
+        }
+    }
+    &__bottom {
+        display: flex;
+        justify-content: flex-end;
+    }
+}

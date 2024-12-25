@@ -1,0 +1,95 @@
+.main-header {
+  background-color: #0066b3;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  z-index: 301;
+  height: 66px;
+}
+
+.sitename {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-left: 20px;
+}
+
+.sub-namesite {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #ffffff;
+  margin-left: 96px;
+}
+
+.box-header {
+  width: 335px;
+  height: 114px;
+  border-radius: 16px;
+}
+
+.box-number {
+  background-color: #ebe9e9;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  border-radius: 7px;
+  font-weight: bold;
+}
+
+.under-header {
+  background-color: #0066b3;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  z-index: 300;
+}
+
+.split-background {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.split-background::before,
+.split-background::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: -1;
+}
+
+.split-background::before {
+  top: 0;
+  height: 22%;
+  background-color: #0066b3;
+}
+
+.split-background::after {
+  top: 22%;
+  bottom: 0;
+}
+
+.custom-data {
+  position: absolute;
+  top: 80px;
+}
+
+.custom-icon {
+  width: 18%;
+  height: 54%;
+  border-radius: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

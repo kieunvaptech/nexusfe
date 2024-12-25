@@ -1,0 +1,11 @@
+@mixin text-truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@mixin submenu-level($number) {
+  padding-left: #{$number * 8}px;
+  $number: if($number > 4, 4, if($number < 1, 1, $number));
+  font-size: #{15px - (($number - 1) * 1px)};
+}

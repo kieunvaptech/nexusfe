@@ -1,0 +1,198 @@
+.nexus-ant-table {
+  width: auto;
+}
+
+
+.ksdb-ant-table {
+  &__phu-luc {
+    th.ant-table-cell {
+      padding: 8px !important;
+    }
+    td.ant-table-cell {
+      padding: 4px !important;
+      height: 40px !important;
+      .ant-input-number,
+      input {
+        min-width: 80% !important;
+        border-radius: 4px;
+      }
+      input {
+        min-height: 38px !important;
+      }
+      textarea {
+        min-height: 40px !important;
+        padding-top: 8px !important;
+      }
+      .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+        height: 40px !important;
+      }
+    }
+  }
+  th.ant-table-cell {
+    color: black !important;
+    background-color: #ecf6fe !important;
+    text-align: center !important;
+    &::before {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      width: 1px;
+      transform: translateY(-50%);
+      transition: background-color 0.3s;
+      content: '';
+      background-color: #fff !important;
+      height: 100% !important;
+    }
+    &__text-center {
+      text-align: center;
+    }
+    &__text-left {
+      text-align: left;
+    }
+    &__text-right {
+      text-align: right;
+    }
+  }
+  .text-center {
+    td.ant-table-cell {
+      text-align: center !important;
+    }
+  }
+  td.ant-table-cell {
+    white-space: break-spaces;
+    &::before {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      width: 1px;
+      transform: translateY(-50%);
+      transition: background-color 0.3s;
+      content: '';
+      background-color: #f0f0f0 !important;
+      height: 100% !important;
+    }
+    &__text-left {
+      text-align: left;
+      input,
+      textarea {
+        text-align: left;
+      }
+    }
+    &__text-right {
+      text-align: right;
+      input,
+      textarea {
+        text-align: right;
+      }
+    }
+  }
+  .table-expanded {
+    th.ant-table-cell {
+      color: #444 !important;
+      background-color: #ffffff !important;
+      text-align: center !important;
+      font-family: Roboto, serif;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 18px;
+      letter-spacing: 0px;
+      &::before {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        width: 1px;
+        transform: translateY(-50%);
+        transition: background-color 0.3s;
+        content: '';
+        background-color: #f0f0f0 !important;
+        height: 100% !important;
+      }
+    }
+  }
+  .ant-table-row {
+    &__bold {
+      font-weight: 700;
+    }
+    &__italic {
+      font-style: italic;
+      font-weight: 500;
+    }
+    &__italic-bold {
+      font-style: italic;
+      font-weight: 700;
+    }
+  }
+  .ant-table-row-expand-icon {
+    border: 1px solid #5383c3 !important;
+    color: #5383c3 !important;
+  }
+  .cell-d-flex {
+    display: grid;
+  }
+  input:disabled,
+  textarea:disabled,
+  .ant-input-number-disabled {
+    outline: none;
+    border: none;
+    background-image: none;
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    color: #000;
+  }
+  .duplicate-row > td {
+    background-color: #f1d0cb !important;
+  }
+  .icon-row-center > button {
+    margin: 0 8px;
+  }
+  .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+    background: #e5f0fa;
+  }
+  .parent-row {
+    font-weight: bold;
+  }
+}
+
+.ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+.ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+  background: #e5f0fa; //Change the existing color to `unset`
+}
+
+.dashboard-table {
+  th.ant-table-cell {
+    color: #fff !important;
+    background-color: #5383c3 !important;
+  }
+}
+
+.div-more-action {
+  padding: 10px 20px 10px 20px;
+  cursor: pointer;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  display: flex;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  align-items: center;
+  &:hover {
+    background-color: rgba(0, 123, 255, 0.9);
+    color: #fff;
+    img {
+      filter: brightness(3.5);
+    }
+    .anticon {
+      color: #fff;
+    }
+  }
+}
+
+.ant-card-bordered {
+  border: 1px solid #f0f0f0;
+  border-radius: 20px;
+}

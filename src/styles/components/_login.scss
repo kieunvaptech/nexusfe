@@ -1,0 +1,22 @@
+.login {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    input {
+        height: 50px;
+        outline: none;
+        border-radius: 10px;
+        width: 100%;
+        padding-left: 20px;
+        padding-right: 20px;
+        border: 1px solid #a1a7ad;
+        font-size: 16px;
+        line-height: 24px;
+    }
+    .ant-switch {
+        background-color: #e2e8f0;
+    }
+    .ant-switch-checked {
+        background-color: #1890ff;
+    }
+}

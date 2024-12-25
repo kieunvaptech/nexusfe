@@ -1,0 +1,163 @@
+.main-nav {
+  margin-top: 6px;
+  border-radius: 12px;
+  box-shadow: 0 1px 30px 0 #0000001c;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 301;
+  .ant-menu-root.ant-menu-inline {
+    border-radius: 12px;
+    .ant-menu-item::after {
+      border-right: unset;
+    }
+  }
+  .ant-menu-item.menu-logo {
+    height: 66px !important;
+    margin-top: 8px;
+  }
+  .sidebar-logo {
+    display: flex;
+    justify-content: center;
+    img {
+      padding-left: 40px;
+      padding-right: 40px;
+      padding-bottom: 6px;
+      height: 66px;
+      border-bottom: 1px solid #ebebeb;
+    }
+  }
+  .ant-menu-item,
+  .ant-menu-submenu-title {
+    width: calc(100% - 16px);
+    height: 56px !important;
+    border-radius: 6px;
+    padding-left: 6px !important;
+    padding-right: 6px;
+    margin: 0 8px 8px;
+    &:hover {
+      background-color: #e6f7ff;
+      color: black;
+    }
+    .ant-menu-title-content {
+      max-width: 240px;
+      font-size: 15px;
+    }
+  }
+  .ant-menu-item:not(:first-child),
+  .ant-menu-submenu-title {
+    .ant-menu-title-content a {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  }
+  .ant-menu-item-selected {
+    color: black;
+    svg {
+      filter: invert(26%) sepia(99%) saturate(7473%) hue-rotate(1deg) brightness(104%) contrast(104%);
+    }
+  }
+  .ant-menu-submenu-selected.root-submenu {
+    color: black;
+    & > .ant-menu-submenu-title {
+      background-color: #e5f0fa;
+    }
+    svg {
+      filter: invert(26%) sepia(99%) saturate(7473%) hue-rotate(1deg) brightness(104%) contrast(104%);
+    }
+  }
+  .ant-menu-item.menu-sub-header {
+    height: 40px !important;
+    margin-bottom: 0;
+    a {
+      color: #99a0a9;
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 600;
+    }
+  }
+  .ant-menu-item-selected a,
+  .ant-menu-item-selected a:hover {
+    color: black;
+  }
+  @for $i from 1 through 10 {
+    // Thay đổi 10 thành số lượng lớp bạn cần
+    .submenu-level-#{$i} {
+      @include submenu-level($i);
+    }
+  }
+}
+
+.collapsedMenu {
+  .ant-menu-inline,
+  .ant-menu-vertical {
+    border-radius: 16px;
+    border-right: unset;
+    padding-bottom: 56px !important;
+  }
+  .ant-menu-submenu-arrow {
+    display: none;
+  }
+  .ant-menu-light .ant-menu-item-selected {
+    background-color: #e5f0fa !important;
+  }
+  .ant-menu-light .ant-menu-submenu-selected > .ant-menu-submenu-title {
+    background-color: #e5f0fa !important;
+  }
+  .ant-menu-item {
+    text-overflow: unset;
+    margin-inline: 0;
+    width: 100%;
+    margin-top: 0;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ant-menu-submenu-title {
+    margin-inline: 0;
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 8px;
+    height: 56px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+      margin-inline: 0;
+      width: 100%;
+    }
+  }
+  .ant-menu-item.menu-logo {
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+    border-bottom: 1px solid #ebebeb;
+    margin-top: 0px;
+    height: 40px !important;
+    .ant-menu-title-content {
+      display: inline-block;
+      margin-top: 6px;
+      padding-bottom: 2px;
+      .sidebar-logo {
+        display: flex;
+        justify-content: center;
+        img {
+          padding: 0 !important;
+          height: 20px;
+          border-bottom: unset;
+        }
+      }
+    }
+  }
+  .ant-menu-item.menu-sub-header {
+    display: none !important;
+  }
+  .ant-menu-title-content {
+    font-size: 14px !important;
+  }
+  
+}
+
+.ant-layout-sider{
+  background: #ffffff !important;
+}
