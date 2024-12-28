@@ -2,13 +2,13 @@ import { Form, Table, Typography } from 'antd'
 import Content from 'layout/Content'
 import { Pagination } from 'components/organisms/Pagination';
 import { memo, useEffect, useState } from 'react'
-import { useProductActions } from "../../actions/product.action";
+import { useProductActions } from "../../actions/supplier.action";
 import { ProductColumns } from "./columns";
 import ProductSearchForm from './component/ProductSearchForm';
 import ProductInfoForm from './component/ProductInfoForm';
 import { useCategoryActions } from 'actions/category.action';
 import { DefaultOptionType } from 'antd/lib/select';
-import { Category } from 'models/Category.model';
+import { Category } from 'models/Supplier.model';
 import { FORM_MODE } from 'utils/Constants';
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc';
 import { cloneDeep } from 'lodash-es'

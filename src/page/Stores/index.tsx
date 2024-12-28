@@ -2,28 +2,27 @@ import { Form, Modal, Table, Typography } from 'antd'
 import Content from 'layout/Content'
 import { Pagination } from 'components/organisms/Pagination';
 import { memo, useEffect, useState } from 'react'
-import { useProductActions } from "../../actions/product.action";
 import { CategoryColumns } from "./columns";
 import CategorySearchForm from './component/CategorySearchForm';
-import CategoryInfoForm from './component/CategoryInfoForm';
-import { useCategoryActions } from 'actions/category.action';
+import StoreInfoForm from './component/StoreInfoForm';
+import { useStoreActions } from 'actions/store.action';
 import { DefaultOptionType } from 'antd/lib/select';
-import { Category } from 'models/Category.model';
 import { FORM_MODE } from 'utils/Constants';
 import { messageSuccessDefault } from 'utils/CommonFc';
+import { Store } from 'models/Store.model';
 const { confirm } = Modal;
 
 const StorePage = () => {
 
   const [form] = Form.useForm()
-  const categoryActions = useCategoryActions();
-  const [dataSourceProduct, setDataSourceProduct] = useState();
+  const storeActions = useStoreActions();
+  const [dataSourceProduct, setDataSourceProduct] = useState<Store[]>([]);
   const [pageIndex, setPageIndex] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
   const [total, setTotal] = useState(0)
   const [openInfo, setOpenInfo] = useState<boolean>(false)
   const [categorysOption, setcategorysOption] = useState<DefaultOptionType[]>([])
-  const [rowData, setRowData] = useState<any>(null)
+  const [rowData, setRowData] = useState<Store>({})
   const [mode, setMode] = useState<number>(1)
 
   useEffect(() => {
@@ -31,20 +30,19 @@ const StorePage = () => {
   }, [])
 
   const init = () => {
-    getCategorys()
-    // getProducts(1)
+    getStores()
   }
 
-  const getCategorys = async () => {
-    const categorysResponse: any = await categoryActions.getCategories();
-    console.log("categorysResponse", categorysResponse);
-    if (categorysResponse) {
-      setDataSourceProduct(categorysResponse);
-      const options: DefaultOptionType[] = categorysResponse.map((category: Category) => ({
-        label: category.name,
-        value: category.id
-      }))
-      setcategorysOption(options)
+  const getStores = async () => {
+    const response: Store[] = await storeActions.getStores();
+    console.log("getStores", response);
+    if (response) {
+      setDataSourceProduct(response);
+      // const options: DefaultOptionType[] = response.map((store: Store) => ({
+      //   label: store.storeName,
+      //   value: category.s
+      // }))
+      // setcategorysOption(options)
     }
 
 
@@ -52,26 +50,27 @@ const StorePage = () => {
 
 
   const deleteCategory = async (id: number) => {
-    try{
-      const response = await categoryActions.deleteCategory(id);
-      if(response){
-        getCategorys()
-        messageSuccessDefault({ message: "Xoá danh mục thành công" })
-      }
+    // try{
+    //   const response = await categoryActions.deleteCategory(id);
+    //   if(response){
+    //     getCategorys()
+    //     messageSuccessDefault({ message: "Xoá danh mục thành công" })
+    //   }
       
-    }catch(error: any){
+    // }catch(error: any){
 
-    }
+    // }
     
   }
 
   const add = () => {
+    setRowData({})
     setMode(FORM_MODE.NEW)
     setOpenInfo(true)
   }
 
   const reloadData = () => {
-    getCategorys()
+    getStores()
     setOpenInfo(false)
   }
 
@@ -98,9 +97,9 @@ const StorePage = () => {
         <CategorySearchForm
           form={form}
           categorysOption={categorysOption}
-          onSearch={() => getCategorys()}
+          onSearch={() => getStores()}
           onInfo={() => add()} />
-        <CategoryInfoForm
+        <StoreInfoForm
           data={rowData}
           mode={mode}
           categorysOption={categorysOption}

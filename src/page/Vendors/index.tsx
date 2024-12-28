@@ -2,28 +2,26 @@ import { Form, Table, Typography } from 'antd'
 import Content from 'layout/Content'
 import { Pagination } from 'components/organisms/Pagination';
 import { memo, useEffect, useState } from 'react'
-import { useProductActions } from "../../actions/product.action";
+import { useSupplierActions } from "../../actions/supplier.action";
 import { ProductColumns } from "./columns";
 import ProductSearchForm from './component/ProductSearchForm';
-import ProductInfoForm from './component/ProductInfoForm';
-import { useCategoryActions } from 'actions/category.action';
+import ProductInfoForm from './component/SupplierInfoForm';
 import { DefaultOptionType } from 'antd/lib/select';
-import { Category } from 'models/Category.model';
-import { FORM_MODE } from 'utils/Constants';
+import { FORM_MODE, messageType } from 'utils/Constants';
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc';
 import { cloneDeep } from 'lodash-es'
+import { Supplier } from 'models/Supplier.model';
 
 const VendorPage = () => {
   const [form] = Form.useForm()
-  const productActions = useProductActions();
-  const categoryActions = useCategoryActions();
-  const [dataSourceProduct, setDataSourceProduct] = useState();
+  const supplierActions = useSupplierActions();
+  const [dataSourceProduct, setDataSourceProduct] = useState<Supplier[]>([]);
   const [pageIndex, setPageIndex] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
   const [total, setTotal] = useState(0)
   const [openInfo, setOpenInfo] = useState<boolean>(false)
   const [categorysOption, setcategorysOption] = useState<DefaultOptionType[]>([])
-  const [idSelected, setIdSelected] = useState<number | null>(null)
+  const [rowData, setRowData] = useState<Supplier>({})
   const [mode, setMode] = useState<number>(1)
   const [dataSearch, setDataSearch] = useState({})
 
@@ -32,30 +30,11 @@ const VendorPage = () => {
   }, [])
 
   const init = () => {
-    getCategorys()
-    getProducts(1)
+    getSuppliers(1)
   }
 
-  const getCategorys = async () => {
-    try {
-      const categorysResponse = await categoryActions.getCategories();
-      if (categorysResponse) {
-        const options: DefaultOptionType[] = categorysResponse.map((category: Category) => ({
-          label: category.name,
-          value: category.id
-        }))
-        setcategorysOption(options)
-      }
-
-    } catch (error) {
-      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
-
-    }
-  }
-
-
-
-  const getProducts = async (pageIndex: number, search?: any) => {
+ 
+  const getSuppliers = async (pageIndex: number, search?: any) => {
     try {
       if (!search) {
         search = cloneDeep(dataSearch)
@@ -66,15 +45,14 @@ const VendorPage = () => {
         limit: pageSize,
         ...search
       }
-      const productsResponse = await productActions.getAllProduct(param);
-      if (productsResponse) {
-        setDataSourceProduct(productsResponse.products);
-        setTotal(productsResponse.totalPages * pageSize)
+      const response: Supplier[] = await supplierActions.getSuppliers(param);
+      if (response) {
+        setDataSourceProduct(response);
+        // setTotal(productsResponse.totalPages * pageSize)
       }
 
     } catch (error) {
-      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
-
+      messageErrorDefault({ message: messageType.CHECK_INTERNET })
     }
 
 
@@ -85,11 +63,10 @@ const VendorPage = () => {
     try {
       const values = form.getFieldsValue()
       setDataSearch(values)
-      getProducts(1, values)
+      getSuppliers(1, values)
 
     } catch (error) {
-      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
-
+      messageErrorDefault({ message: messageType.CHECK_INTERNET })
     }
   }
 
@@ -97,38 +74,35 @@ const VendorPage = () => {
     try {
       form.resetFields()
       setDataSearch({})
-      getProducts(1,{})
+      getSuppliers(1,{})
 
     } catch (error) {
-      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
-
+      messageErrorDefault({ message: messageType.CHECK_INTERNET })
     }
   }
 
   const deleteProduct = async (id: number) => {
     try {
-      const response = await productActions.deleteProduct(id);
+      const response = await supplierActions.deleteSupplier(id);
       if (response) {
-        getProducts(1)
+        getSuppliers(1)
         messageSuccessDefault({ message: "Xoá sản phẩm thành công" })
       }
 
     } catch (error) {
-      console.log("error", error)
-      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
-
+      messageErrorDefault({ message: messageType.CHECK_INTERNET })
     }
 
   }
 
   const add = () => {
-    setIdSelected(null)
+    setRowData({})
     setMode(FORM_MODE.NEW)
     setOpenInfo(true)
   }
 
   const reloadData = () => {
-    getProducts(1)
+    getSuppliers(1)
     setOpenInfo(false)
   }
 
@@ -147,7 +121,7 @@ const VendorPage = () => {
           onReset={resetSearch}
           onInfo={() => add()} />
         <ProductInfoForm
-          id={idSelected}
+          data={rowData}
           mode={mode}
           categorysOption={categorysOption}
           open={openInfo}
@@ -159,12 +133,12 @@ const VendorPage = () => {
             actionXem: (record: any) => {
               setMode(FORM_MODE.VIEW)
               setOpenInfo(true)
-              setIdSelected(record.id)
+              setRowData(record)
             },
             actionCapNhat: (record: any) => {
               setMode(FORM_MODE.UPDATE)
               setOpenInfo(true)
-              setIdSelected(record.id)
+              setRowData(record)
             },
             actionXoa: (record: any) => {
               deleteProduct(record.id)
@@ -180,7 +154,7 @@ const VendorPage = () => {
               pageSize={pageSize}
               setPageSize={setPageSize}
               pageIndex={pageIndex}
-              setPageIndex={getProducts}
+              setPageIndex={getSuppliers}
             />
           )}
         </div>

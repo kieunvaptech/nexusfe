@@ -1,4 +1,4 @@
-import { useProductActions } from 'actions/product.action'
+import { useProductActions } from 'actions/supplier.action'
 import { ProductAddRequest } from 'actions/ProductAddRequest'
 import {
   Button,

@@ -1,5 +1,4 @@
-import { useProductActions } from 'actions/product.action'
-import { ProductAddRequest } from 'actions/ProductAddRequest'
+import { useSupplierActions } from 'actions/supplier.action'
 import {
   Button,
   Col,
@@ -16,30 +15,31 @@ import { DefaultOptionType } from 'antd/lib/select'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc'
-import { FORM_MODE } from 'utils/Constants'
+import { FORM_MODE, messageType } from 'utils/Constants'
 import { UploadOutlined } from '@ant-design/icons'
 import { BASE_IMAGE } from 'connection'
+import { Supplier } from 'models/Supplier.model'
 
-interface ProductInfoFormProps extends ModalProps {
+interface SupplierInfoFormProps extends ModalProps {
   handleCancel: () => void
   categorysOption: DefaultOptionType[]
   reload?: () => void
-  id: number | null
+  data: Supplier
   mode: number
 }
 
-const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
+const SupplierInfoForm: React.FC<SupplierInfoFormProps> = ({
   handleCancel,
   categorysOption,
   reload,
-  id,
+  data,
   mode,
   ...props
 }) => {
 
   const { t } = useTranslation()
   const [form] = Form.useForm()
-  const productActions = useProductActions();
+  const supplierActions = useSupplierActions();
 
   const [fileListOld, setFileListOld] = useState<any[]>([]);
   const [fileList, setFileList] = useState<any[]>([]);
@@ -54,7 +54,7 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
 
     try {
       if (id) {
-        const imageResponse: any = await productActions.addProductImage(id, formData);
+        const imageResponse: any = await supplierActions.addProductImage(id, formData);
         if (imageResponse) {
           onSuccess(imageResponse);
           console.log("imageResponse", imageResponse)
@@ -71,8 +71,8 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
   useEffect(() => {
     form.resetFields()
     if (props.open) {
-      if (id) {
-        productDetail(id)
+      if (data) {
+        form.setFieldsValue(data)
       } else {
         resetForm()
       }
@@ -91,7 +91,7 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
 
   const productDetail = async (id: number) => {
     try {
-      const productResponse: any = await productActions.detailProduct(id);
+      const productResponse: any = await supplierActions.detailSupplier(id);
       if (productResponse) {
         form.setFieldsValue(productResponse)
         const files = productResponse.product_images.map((file: any) => ({
@@ -101,9 +101,7 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
         setFileListOld(files)
       }
     } catch (error) {
-      console.log("error", error)
-      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
-
+      messageErrorDefault({ message: messageType.CHECK_INTERNET })
     }
 
   }
@@ -114,15 +112,15 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
 
       const values = await form.validateFields()
       if (values) {
-        if (id) {
+        if (data) {
           const body = {
-            id,
+            supplierId: data.supplierId,
             ...values
           }
-          productUpdate(body)
+          updateSupplier(body)
         }
         else
-          productAdd(values)
+          addSupplier(values)
 
       }
     } catch (errInfo) {
@@ -130,42 +128,38 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
     }
   }
 
-  const productAdd = async (body: ProductAddRequest) => {
+  const addSupplier = async (body: Supplier) => {
     try {
-      const productResponse: any = await productActions.addProduct(body);
-      if (productResponse) {
-        messageSuccessDefault({ message: "Thêm sản phẩm thành công" })
+      const response: Supplier = await supplierActions.addSupplier(body);
+      if (response) {
+        messageSuccessDefault({ message: messageType.ADD_SUCCESS })
         if (reload) reload()
       }
 
     } catch (error) {
-      console.log("error", error)
-      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
-
+      messageErrorDefault({ message: messageType.CHECK_INTERNET })
     }
 
   }
 
-  const productUpdate = async (body: ProductAddRequest) => {
+  const updateSupplier = async (body: Supplier) => {
     try {
-      const productResponse: any = await productActions.updateProduct(body);
-      if (productResponse) {
-        messageSuccessDefault({ message: "Cập nhật sản phẩm thành công" })
+      const response: Supplier = await supplierActions.updateSupplier(body);
+      if (response) {
+        messageSuccessDefault({ message: messageType.UPDATE_SUCCESS })
         if (reload) reload()
       }
 
     } catch (error) {
-      console.log("error", error)
-      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
-
+      messageErrorDefault({ message: messageType.CHECK_INTERNET })
     }
 
   }
 
   const getTitle = () => {
-    if (mode === FORM_MODE.NEW) return 'Thêm sản phẩm'
-    if (mode === FORM_MODE.UPDATE) return 'Cập nhật sản phẩm'
-    if (mode === FORM_MODE.VIEW) return 'Chi tiết sản phẩm'
+    if (mode === FORM_MODE.NEW) return 'Add new Supplier'
+    if (mode === FORM_MODE.UPDATE) return 'Update Supplier'
+    if (mode === FORM_MODE.VIEW) return 'Supplier Detail'
   }
 
   return (
@@ -181,7 +175,7 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
               }}
               className="w-[144px] min-h-[40px]"
             >
-              {mode === FORM_MODE.NEW ? 'Thêm' : 'Cập nhật'}
+              {mode === FORM_MODE.NEW ? messageType.ADD_NEW : messageType.UPDATE}
             </Button>
           }
           <Button
@@ -190,7 +184,7 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
             }}
             className="w-[144px] min-h-[40px]"
           >
-            Thoát
+            {messageType.EXIT}
           </Button>
         </div>,
       ]}
@@ -202,9 +196,9 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
         <Row className="justify-between">
           <Col span={11}>
             <Form.Item
-              label="Tên sản phẩm"
-              name="name"
-              rules={[{ required: true, message: 'Đơn vị quản lý không được để trống' }]}
+              label="supplierName"
+              name="supplierName"
+              rules={[{ required: true, message: 'supplierName is require' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
@@ -213,9 +207,9 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
           </Col>
           <Col span={11}>
             <Form.Item
-              label="Giá tiền"
-              name="price"
-              rules={[{ required: true, message: 'Mã TCTGBHTG không được để trống' }]}
+              label="contactName"
+              name="contactName"
+              rules={[{ required: true, message: 'contactName is require' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
@@ -226,21 +220,34 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
         <Row className="justify-between">
           <Col span={11}>
             <Form.Item
-              label="Danh mục sản phẩm"
-              name="category_id"
-              rules={[{ required: true, message: 'Đơn vị quản lý không được để trống' }]}
+              label="phoneNumber"
+              name="phoneNumber"
+              rules={[{ required: true, message: 'phoneNumber is require' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
-              <Select options={categorysOption} disabled={mode === FORM_MODE.VIEW} />
+              <Input />
             </Form.Item>
           </Col>
           <Col span={11}>
             <Form.Item
-              label="Thông tin chi tiết"
-              name="description"
-              labelAlign='left'
-              rules={[{ required: true }]}
+              label="email"
+              name="email"
+              rules={[{ required: true, message: 'email is require' }]}
+              labelCol={{ span: 6 }}
+              wrapperCol={{ span: 16 }}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row className="justify-between">
+          <Col span={11}>
+            <Form.Item
+              label="address"
+              name="address"
+              // labelAlign='left'
+              rules={[{ required: true, message: 'address is require' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
@@ -248,48 +255,6 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
             </Form.Item>
           </Col>
         </Row>
-
-        {
-          id &&
-          <Row className="justify-between">
-            <Col span={11}>
-              <Form.Item
-                label="Thêm ảnh sản phẩm"
-                name="file"
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 16 }}
-              >
-
-                <Upload
-                  customRequest={customRequest}
-                  onChange={handleChange}
-                  fileList={fileList}
-                  listType="picture"
-                  // showUploadList={true}
-                  multiple={true}
-                  maxCount={5}
-                  showUploadList={{ showRemoveIcon: false }}
-                >
-                  <Button
-                    icon={<UploadOutlined className="text-3xl cursor-pointer" />}
-                    className="rounded-none border-none !min-w-10"
-                  ></Button>
-                </Upload>
-
-              </Form.Item>
-            </Col>
-            <Col span={11}>
-              <Upload
-                listType="picture-card"
-                fileList={fileListOld}
-                showUploadList={{ showRemoveIcon: false }}
-              >
-              </Upload>
-            </Col>
-          </Row>
-        }
-
-
 
 
       </Form>
@@ -299,4 +264,4 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
   )
 }
 
-export default ProductInfoForm
+export default SupplierInfoForm

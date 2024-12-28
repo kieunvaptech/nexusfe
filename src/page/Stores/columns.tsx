@@ -30,15 +30,28 @@ export const CategoryColumns = (props: Props) => {
         {
             width: 150,
             fixed: 'left' as 'left',
-            dataIndex: 'name',
-            title: 'Tên danh mục',
-            key: 'name',
+            dataIndex: 'storeName',
+            title: 'Store Name',
+            key: 'storeName',
         },
-        
+        {
+            width: 150,
+            fixed: 'left' as 'left',
+            dataIndex: 'address',
+            title: 'Address',
+            key: 'address',
+        },
+        {
+            width: 150,
+            fixed: 'left' as 'left',
+            dataIndex: 'phoneNumber',
+            title: 'Phone',
+            key: 'phoneNumber',
+        },
         {
             width: 80,
             dataIndex: 'action',
-            title: 'Chức năng',
+            title: 'Action',
             key: 'action',
             fixed: 'right' as 'right',
             render: (text: any, record: any) => {

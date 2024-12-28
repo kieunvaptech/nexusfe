@@ -131,3 +131,13 @@ export const stylesTextColumn: { [key: number]: string } = {
 }
 
 export const listTypeNumberWithCommas = ['Triệu đồng', 'Đồng']
+
+
+export const messageType = {
+  ADD_NEW: "Add new",
+  UPDATE: "Update",
+  EXIT: "Exit",
+  ADD_SUCCESS: "Add new success",
+  UPDATE_SUCCESS: "Update success",
+  CHECK_INTERNET: "Check your internet connection"
+}

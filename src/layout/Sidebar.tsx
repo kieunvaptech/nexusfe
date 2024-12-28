@@ -23,14 +23,14 @@ function getItem(
 
 const items: MenuProps['items'] = [
   getItem('Dashboard', '', <DashboardOutlined />),
-  getItem('Billings', 'billings', <ProductOutlined />),
-  getItem('Orders', 'orders', <ProductOutlined />),
+  // getItem('Billings', 'billings', <ProductOutlined />),
+  // getItem('Orders', 'orders', <ProductOutlined />),
   // getItem('Order Detail', 'order-detail', <ProductOutlined />),
-  getItem('Customers', 'customers', <ProductOutlined />),
+  // getItem('Customers', 'customers', <ProductOutlined />),
   getItem('Stores', 'stores', <ProductOutlined />),
-  getItem('Plans', 'plans', <ProductOutlined />),
-  getItem('Equipments', 'equipments', <ProductOutlined />),
-  getItem('Employees', 'employees', <ProductOutlined />),
+  // getItem('Plans', 'plans', <ProductOutlined />),
+  // getItem('Equipments', 'equipments', <ProductOutlined />),
+  // getItem('Employees', 'employees', <ProductOutlined />),
   getItem('Vendors', 'vendors', <ProductOutlined />),
   // getItem('Quản lý sản phẩm', 'sale', <PicLeftOutlined />, [
   //   getItem('Danh mục', 'category'),
