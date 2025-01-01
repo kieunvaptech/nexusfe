@@ -1,4 +1,4 @@
-import { notification } from 'antd'
+import { notification, Modal } from 'antd'
 import { cloneDeep } from 'lodash-es'
 import Error from 'assets/icons/error.svg'
 import WarningIcon from 'components/atoms/icons/WarningIcon'
@@ -240,7 +240,7 @@ export function validateFileV2(file: File, allowFiles: string[] = []): boolean {
   }
 
   if (file?.size > 20 * 1024 * 1024) {
-    messageError({ message: ""})
+    messageError({ message: "" })
     return false
   }
   return true
@@ -333,5 +333,17 @@ export const customTitleRequire = (label: string) => {
     </span>
   )
 }
+
+
+const { confirm } = Modal;
+export const showConfirm = (callback: Promise<void>) => {
+  confirm({
+    title: 'Xác nhận',
+    content: 'Bạn chắc chắn muốn xóa?',
+    okText: 'Xóa',
+    cancelText: 'Quay lại',
+    onOk: () => callback,
+  });
+};
 
 

@@ -2,22 +2,18 @@ import { Form, Table, Typography } from 'antd'
 import Content from 'layout/Content'
 import { Pagination } from 'components/organisms/Pagination';
 import { memo, useEffect, useState } from 'react'
-import { useProductActions } from "../../actions/supplier.action";
 import { OrderColumns } from "./columns";
 import ProductSearchForm from './component/OrderSearchForm';
-import { useCategoryActions } from 'actions/category.action';
 import { DefaultOptionType } from 'antd/lib/select';
-import { Category } from 'models/Supplier.model';
 import { FORM_MODE } from 'utils/Constants';
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc';
-import { useOrderActions } from 'actions/order.action';
 import OrderInfoForm from './component/OrderInfoForm';
 import { cloneDeep } from 'lodash-es';
+import { useOrderActions } from 'actions/order.action';
 
 const OrderPage = () => {
   const [form] = Form.useForm()
   const orderActions = useOrderActions();
-  const categoryActions = useCategoryActions();
   const [dataSourceOrder, setDataSourceOrder] = useState();
   const [pageIndex, setPageIndex] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
@@ -109,7 +105,7 @@ const OrderPage = () => {
 
 
   return (
-    <Content>
+    <Content loading={false}>
       <>
       <br />
         <div className="mx-1.5">
@@ -121,13 +117,13 @@ const OrderPage = () => {
           categorysOption={categorysOption}
           onSearch={onSearch}
           onReset={resetSearch} />
-        <OrderInfoForm
+        {/* <OrderInfoForm
           mode={mode}
           open={openInfo}
           data={selected}
           reload={reloadData}
           handleCancel={() => setOpenInfo(false)}
-        />
+        /> */}
         <Table
           columns={OrderColumns({
             actionXem: (record: any) => {

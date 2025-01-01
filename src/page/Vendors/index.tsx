@@ -1,16 +1,17 @@
-import { Form, Table, Typography } from 'antd'
+import { Form, Table, Typography, Modal } from 'antd'
 import Content from 'layout/Content'
 import { Pagination } from 'components/organisms/Pagination';
 import { memo, useEffect, useState } from 'react'
 import { useSupplierActions } from "../../actions/supplier.action";
 import { ProductColumns } from "./columns";
-import ProductSearchForm from './component/ProductSearchForm';
-import ProductInfoForm from './component/SupplierInfoForm';
+import SupplierSearchForm from './component/SupplierSearchForm';
+import SupplierInfoForm from './component/SupplierInfoForm';
 import { DefaultOptionType } from 'antd/lib/select';
 import { FORM_MODE, messageType } from 'utils/Constants';
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc';
 import { cloneDeep } from 'lodash-es'
 import { Supplier } from 'models/Supplier.model';
+const { confirm } = Modal;
 
 const VendorPage = () => {
   const [form] = Form.useForm()
@@ -21,7 +22,7 @@ const VendorPage = () => {
   const [total, setTotal] = useState(0)
   const [openInfo, setOpenInfo] = useState<boolean>(false)
   const [categorysOption, setcategorysOption] = useState<DefaultOptionType[]>([])
-  const [rowData, setRowData] = useState<Supplier>({})
+  const [rowData, setRowData] = useState<Supplier>()
   const [mode, setMode] = useState<number>(1)
   const [dataSearch, setDataSearch] = useState({})
 
@@ -33,7 +34,7 @@ const VendorPage = () => {
     getSuppliers(1)
   }
 
- 
+
   const getSuppliers = async (pageIndex: number, search?: any) => {
     try {
       if (!search) {
@@ -45,7 +46,7 @@ const VendorPage = () => {
         limit: pageSize,
         ...search
       }
-      const response: Supplier[] = await supplierActions.getSuppliers(param);
+      const response: Supplier[] = await supplierActions.getSuppliers();
       if (response) {
         setDataSourceProduct(response);
         // setTotal(productsResponse.totalPages * pageSize)
@@ -74,14 +75,26 @@ const VendorPage = () => {
     try {
       form.resetFields()
       setDataSearch({})
-      getSuppliers(1,{})
+      getSuppliers(1, {})
 
     } catch (error) {
       messageErrorDefault({ message: messageType.CHECK_INTERNET })
     }
   }
 
-  const deleteProduct = async (id: number) => {
+  const showConfirm = (record: Supplier) => {
+    confirm({
+      title: 'Confirm',
+      content: 'Do you want to delete?',
+      okText: 'Yes',
+      cancelText: 'No',
+      onOk() {
+        deleteSupplier(record?.supplierId || 0)
+      }
+    });
+  };
+
+  const deleteSupplier = async (id: number) => {
     try {
       const response = await supplierActions.deleteSupplier(id);
       if (response) {
@@ -96,7 +109,7 @@ const VendorPage = () => {
   }
 
   const add = () => {
-    setRowData({})
+    setRowData(undefined)
     setMode(FORM_MODE.NEW)
     setOpenInfo(true)
   }
@@ -107,20 +120,20 @@ const VendorPage = () => {
   }
 
   return (
-    <Content>
+    <Content loading={false}>
       <>
         <br />
         <div className="mx-1.5">
-          <Typography.Title level={4} >Vendors Management</Typography.Title>
+          <Typography.Title level={4} >Quản lý nhà cung cấp</Typography.Title>
         </div>
 
-        <ProductSearchForm
+        <SupplierSearchForm
           form={form}
           categorysOption={categorysOption}
           onSearch={searchProducts}
           onReset={resetSearch}
           onInfo={() => add()} />
-        <ProductInfoForm
+        <SupplierInfoForm
           data={rowData}
           mode={mode}
           categorysOption={categorysOption}
@@ -130,18 +143,18 @@ const VendorPage = () => {
         />
         <Table
           columns={ProductColumns({
-            actionXem: (record: any) => {
+            actionXem: (record: Supplier) => {
               setMode(FORM_MODE.VIEW)
               setOpenInfo(true)
               setRowData(record)
             },
-            actionCapNhat: (record: any) => {
+            actionCapNhat: (record: Supplier) => {
               setMode(FORM_MODE.UPDATE)
               setOpenInfo(true)
               setRowData(record)
             },
-            actionXoa: (record: any) => {
-              deleteProduct(record.id)
+            actionXoa: (record: Supplier) => {
+              showConfirm(record)
             },
           })}
           dataSource={dataSourceProduct}

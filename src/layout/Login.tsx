@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom'
 import { useUserActions } from "../actions/user.action";
 import { LoginRequest } from "../actions/LoginRequest";
 import { jwtDecode } from "jwt-decode";
+import { setUserInfo } from 'Slice/userSlice'
+import { useDispatch } from 'react-redux'
 
 interface DecodedToken {
   username: string;
@@ -24,7 +26,8 @@ const Login = () => {
   const [form] = Form.useForm()
   const userActions = useUserActions();
   const [loading, setLoading] = React.useState(false)
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = React.useState(false)
 
   const [loginRequest, setLoginRequest] = useState<LoginRequest>({
@@ -58,10 +61,10 @@ const Login = () => {
       const token = await userActions.login(data);
       console.log("loginResponse", token)
       if (token) {
-        const decodedData = jwtDecode<any>(token);
-        console.log("decodedData", JSON.parse(decodedData?.User).UserId)
+        const decoded = jwtDecode<any>(token);
+        const decodedData = JSON.parse(decoded?.Employee);
+        dispatch(setUserInfo(decodedData));
         localStorage.setItem('token', token);
-        // localStorage.setItem('phone', data.phone_number)
         navigate('/')
       }
     } catch (error: any) {

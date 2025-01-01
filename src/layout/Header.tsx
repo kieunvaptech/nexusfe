@@ -1,13 +1,30 @@
+import { Modal } from 'antd'
 import { useUserActions } from 'actions/user.action'
 import Avatar from 'assets/icons/Avatar.svg'
 import { memo, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from 'store'
+import { jwtDecode } from 'jwt-decode'
+import { setUserInfo } from 'Slice/userSlice'
+const { confirm } = Modal;
 
 const HeaderMain = () => {
   const navigate = useNavigate()
-  const userActions = useUserActions();
-  const [info, setInfo] = useState<string>()
+  const dispatch = useDispatch();
+  const userInfo = useSelector((state: RootState) => state.userReducer.userInfo);
 
+  const showConfirm = () => {
+    confirm({
+      title: 'Xác nhận',
+      content: 'Bạn muốn đăng xuất khỏi hệ thống?',
+      okText: 'Đăng xuất',
+      cancelText: 'Hủy',
+      onOk() {
+        handleClickLogout()
+      }
+    });
+  };
 
   const handleClickLogout = async () => {
     localStorage.removeItem('token')
@@ -19,16 +36,12 @@ const HeaderMain = () => {
   }, [])
 
   const getUserDetail = async () => {
-    try {
-      const response: any = await userActions.userDetail();
-      if(response){
-        setInfo(response.fullname)
-      }
-    } catch (error: any) {
-      const phone = localStorage.getItem('phone')
-      setInfo(phone || '')
+    const token = localStorage.getItem('token');
+    if(token){
+      const decoded = jwtDecode<any>(token);
+      const decodedData = JSON.parse(decoded?.Employee);
+      dispatch(setUserInfo(decodedData));
     }
-
   }
 
 
@@ -44,18 +57,18 @@ const HeaderMain = () => {
             <div className="flex space-x-[10px] h-[20px] pr-3">
             </div>
             <a className="text-white text-base flex items-center" href="/">
-            nexus
+              NEXUS SYSTEM
             </a>
           </div>
         </div>
-        <div className="flex relative space-x-[10px] pr-10" onClick={handleClickLogout}>
+        <div className="flex relative space-x-[10px] pr-10" onClick={showConfirm}>
           <div className="flex space-x-[10px]">
             <img src={Avatar} alt="Avatar" />
           </div>
           <div className="profile flex h-[40px] cursor-pointer">
             <div className="flex-col text-[14px] text-white hidden lg:flex flex justify-center">
               <div className="font-bold" style={{ color: '#ffffff' }}>
-                {info}
+                {userInfo?.Username} {userInfo?.FullName}
               </div>
             </div>
           </div>

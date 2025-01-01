@@ -11,7 +11,7 @@ interface FormProps extends ModalProps {
   categorysOption: DefaultOptionType[]
 }
 
-const ProductSearchForm: React.FC<FormProps> = ({
+const EmployeeSearchForm: React.FC<FormProps> = ({
   form,
   onSearch,
   onReset,
@@ -55,13 +55,13 @@ const ProductSearchForm: React.FC<FormProps> = ({
           <Col span={8}></Col>
           <Col span={10}>
             <div className="flex space-x-4">
-              <Button onClick={onSearch}>Tìm kiếm sản phẩm</Button>
-              <Button onClick={onReset}>Xoá tìm kiếm</Button>
+              <Button onClick={onSearch}>Search</Button>
+              <Button onClick={onReset}>Clear</Button>
 
             </div></Col>
           <Col span={6}>
 
-            <Button type="primary" onClick={onInfo}>Thêm mới sản phẩm</Button></Col>
+            <Button type="primary" onClick={onInfo}>Add new</Button></Col>
 
 
 
@@ -74,4 +74,4 @@ const ProductSearchForm: React.FC<FormProps> = ({
   )
 }
 
-export default memo(ProductSearchForm)
+export default memo(EmployeeSearchForm)

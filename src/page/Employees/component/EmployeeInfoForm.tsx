@@ -1,5 +1,4 @@
-import { useProductActions } from 'actions/supplier.action'
-import { ProductAddRequest } from 'actions/ProductAddRequest'
+
 import {
   Button,
   Col,
@@ -16,30 +15,32 @@ import { DefaultOptionType } from 'antd/lib/select'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc'
-import { FORM_MODE } from 'utils/Constants'
+import { FORM_MODE, messageType } from 'utils/Constants'
 import { UploadOutlined } from '@ant-design/icons'
 import { BASE_IMAGE } from 'connection'
+import { Employee } from 'models/Employee.model'
+import { useEmployeeActions } from 'actions/employee.action'
 
 interface ProductInfoFormProps extends ModalProps {
   handleCancel: () => void
   categorysOption: DefaultOptionType[]
   reload?: () => void
-  id: number | null
+  data?: Employee
   mode: number
 }
 
-const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
+const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
   handleCancel,
   categorysOption,
   reload,
-  id,
+  data,
   mode,
   ...props
 }) => {
 
   const { t } = useTranslation()
   const [form] = Form.useForm()
-  const productActions = useProductActions();
+  const employeeActions = useEmployeeActions();
 
   const [fileListOld, setFileListOld] = useState<any[]>([]);
   const [fileList, setFileList] = useState<any[]>([]);
@@ -48,31 +49,31 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
     setFileList(fileList);
   };
 
-  const customRequest = async ({ file, onSuccess, onError }: any) => {
-    const formData = new FormData();
-    formData.append('files', file);
+  // const customRequest = async ({ file, onSuccess, onError }: any) => {
+  //   const formData = new FormData();
+  //   formData.append('files', file);
 
-    try {
-      if (id) {
-        const imageResponse: any = await productActions.addProductImage(id, formData);
-        if (imageResponse) {
-          onSuccess(imageResponse);
-          console.log("imageResponse", imageResponse)
-        }
-      }
+  //   try {
+  //     if (data) {
+  //       const imageResponse: any = await employeeActions.addProductImage(id, formData);
+  //       if (imageResponse) {
+  //         onSuccess(imageResponse);
+  //         console.log("imageResponse", imageResponse)
+  //       }
+  //     }
 
 
-    } catch (error) {
-      console.log("error", error)
-      onError(error);
-    }
-  };
+  //   } catch (error) {
+  //     console.log("error", error)
+  //     onError(error);
+  //   }
+  // };
 
   useEffect(() => {
     form.resetFields()
     if (props.open) {
-      if (id) {
-        productDetail(id)
+      if (data) {
+        form.setFieldsValue(data)
       } else {
         resetForm()
       }
@@ -89,24 +90,24 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
     setFileList([])
   }
 
-  const productDetail = async (id: number) => {
-    try {
-      const productResponse: any = await productActions.detailProduct(id);
-      if (productResponse) {
-        form.setFieldsValue(productResponse)
-        const files = productResponse.product_images.map((file: any) => ({
-          ...file,
-          url: `${BASE_IMAGE}${file.image_url}`
-        }))
-        setFileListOld(files)
-      }
-    } catch (error) {
-      console.log("error", error)
-      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
+  // const productDetail = async (id: number) => {
+  //   try {
+  //     const productResponse: any = await employeeActions.detailProduct(id);
+  //     if (productResponse) {
+  //       form.setFieldsValue(productResponse)
+  //       const files = productResponse.product_images.map((file: any) => ({
+  //         ...file,
+  //         url: `${BASE_IMAGE}${file.image_url}`
+  //       }))
+  //       setFileListOld(files)
+  //     }
+  //   } catch (error) {
+  //     console.log("error", error)
+  //     messageErrorDefault({ message: "Kiểm tra lại kết nối." })
 
-    }
+  //   }
 
-  }
+  // }
 
   const handleSubmit = async () => {
     if (!form) return
@@ -114,9 +115,9 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
 
       const values = await form.validateFields()
       if (values) {
-        if (id) {
+        if (data) {
           const body = {
-            id,
+            employeeId: data?.employeeId,
             ...values
           }
           productUpdate(body)
@@ -130,27 +131,27 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
     }
   }
 
-  const productAdd = async (body: ProductAddRequest) => {
+  const productAdd = async (body: Employee) => {
     try {
-      const productResponse: any = await productActions.addProduct(body);
-      if (productResponse) {
-        messageSuccessDefault({ message: "Thêm sản phẩm thành công" })
+      const response: any = await employeeActions.addEmployee(body);
+      if (response) {
+        messageSuccessDefault({ message: messageType.ADD_SUCCESS })
         if (reload) reload()
       }
 
     } catch (error) {
       console.log("error", error)
-      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
+      messageErrorDefault({ message:  messageType.CHECK_INTERNET })
 
     }
 
   }
 
-  const productUpdate = async (body: ProductAddRequest) => {
+  const productUpdate = async (body: Employee) => {
     try {
-      const productResponse: any = await productActions.updateProduct(body);
-      if (productResponse) {
-        messageSuccessDefault({ message: "Cập nhật sản phẩm thành công" })
+      const response: any = await employeeActions.updateEmployee(body);
+      if (response) {
+        messageSuccessDefault({ message: messageType.UPDATE_SUCCESS })
         if (reload) reload()
       }
 
@@ -163,9 +164,9 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
   }
 
   const getTitle = () => {
-    if (mode === FORM_MODE.NEW) return 'Thêm sản phẩm'
-    if (mode === FORM_MODE.UPDATE) return 'Cập nhật sản phẩm'
-    if (mode === FORM_MODE.VIEW) return 'Chi tiết sản phẩm'
+    if (mode === FORM_MODE.NEW) return 'Add Employee'
+    if (mode === FORM_MODE.UPDATE) return 'Update Employee'
+    if (mode === FORM_MODE.VIEW) return 'Employee Detail'
   }
 
   return (
@@ -181,7 +182,7 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
               }}
               className="w-[144px] min-h-[40px]"
             >
-              {mode === FORM_MODE.NEW ? 'Thêm' : 'Cập nhật'}
+              {mode === FORM_MODE.NEW ? 'Add' : 'Update'}
             </Button>
           }
           <Button
@@ -249,7 +250,7 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
           </Col>
         </Row>
 
-        {
+        {/* {
           id &&
           <Row className="justify-between">
             <Col span={11}>
@@ -287,7 +288,7 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
               </Upload>
             </Col>
           </Row>
-        }
+        } */}
 
 
 
@@ -299,4 +300,4 @@ const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
   )
 }
 
-export default ProductInfoForm
+export default EmployeeInfoForm

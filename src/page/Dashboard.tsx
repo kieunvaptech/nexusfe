@@ -14,9 +14,9 @@ const Dashboard: React.FC = () => {
   
 
   return (
-    <Content className="pb-5">
+    <Content loading={false} className="pb-5">
         <div className="mx-1.5">
-        <Typography.Title level={4} >Chào mừng bạn đến trang quản trị của nexus</Typography.Title>
+        <Typography.Title level={4} >Welcome to NEXUS SYSTEM</Typography.Title>
         </div>
     </Content >
   );

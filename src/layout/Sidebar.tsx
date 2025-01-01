@@ -23,15 +23,15 @@ function getItem(
 
 const items: MenuProps['items'] = [
   getItem('Dashboard', '', <DashboardOutlined />),
-  // getItem('Billings', 'billings', <ProductOutlined />),
-  // getItem('Orders', 'orders', <ProductOutlined />),
+  getItem('Thanh toán', 'thanh-toan', <ProductOutlined />),
+  getItem('Đơn hàng', 'don-hang', <ProductOutlined />),
   // getItem('Order Detail', 'order-detail', <ProductOutlined />),
-  // getItem('Customers', 'customers', <ProductOutlined />),
-  getItem('Stores', 'stores', <ProductOutlined />),
-  // getItem('Plans', 'plans', <ProductOutlined />),
-  // getItem('Equipments', 'equipments', <ProductOutlined />),
-  // getItem('Employees', 'employees', <ProductOutlined />),
-  getItem('Vendors', 'vendors', <ProductOutlined />),
+  getItem('Khách hàng', 'khach-hang', <ProductOutlined />),
+  getItem('Cửa hàng', 'cua-hang', <ProductOutlined />),
+  getItem('Gói sản phẩm', 'goi-san-pham', <ProductOutlined />),
+  getItem('Thiết bị', 'thiet-bi', <ProductOutlined />),
+  getItem('Nhân viên', 'nhan-vien', <ProductOutlined />),
+  getItem('Nhà cung cấp', 'nha-cung-cap', <ProductOutlined />),
   // getItem('Quản lý sản phẩm', 'sale', <PicLeftOutlined />, [
   //   getItem('Danh mục', 'category'),
   //   getItem('Sản phẩm', 'product'),

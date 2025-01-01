@@ -20,7 +20,7 @@ interface CategoryInfoFormProps extends ModalProps {
   handleCancel: () => void
   categorysOption: DefaultOptionType[]
   reload?: () => void
-  data: Store
+  data?: Store
   mode: number
 }
 

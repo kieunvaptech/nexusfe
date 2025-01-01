@@ -52,7 +52,7 @@ const CategorySearchForm: React.FC<FormProps> = ({
             {/* <Button onClick={onSearch}>Tìm kiếm danh mục</Button> */}
           </Col>
           <Col span={8}>
-            <Button type="primary" onClick={onInfo}>Thêm mới danh mục</Button>
+            <Button type="primary" onClick={onInfo}>Add new Store</Button>
           </Col>
 
         </Row>

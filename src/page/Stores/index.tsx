@@ -22,7 +22,7 @@ const StorePage = () => {
   const [total, setTotal] = useState(0)
   const [openInfo, setOpenInfo] = useState<boolean>(false)
   const [categorysOption, setcategorysOption] = useState<DefaultOptionType[]>([])
-  const [rowData, setRowData] = useState<Store>({})
+  const [rowData, setRowData] = useState<Store>()
   const [mode, setMode] = useState<number>(1)
 
   useEffect(() => {
@@ -49,22 +49,22 @@ const StorePage = () => {
   }
 
 
-  const deleteCategory = async (id: number) => {
-    // try{
-    //   const response = await categoryActions.deleteCategory(id);
-    //   if(response){
-    //     getCategorys()
-    //     messageSuccessDefault({ message: "Xoá danh mục thành công" })
-    //   }
+  const deleteStore = async (id: number) => {
+    try{
+      const response = await storeActions.deleteStore(id);
+      if(response){
+        getStores()
+        messageSuccessDefault({ message: "Xoá danh mục thành công" })
+      }
       
-    // }catch(error: any){
+    }catch(error: any){
 
-    // }
+    }
     
   }
 
   const add = () => {
-    setRowData({})
+    setRowData(undefined)
     setMode(FORM_MODE.NEW)
     setOpenInfo(true)
   }
@@ -81,13 +81,13 @@ const StorePage = () => {
       okText: 'Đồng ý',
       cancelText: 'Huỷ',
       onOk() {
-        deleteCategory(record.id)
+        deleteStore(record.storeId)
       }
     });
   };
 
   return (
-    <Content>
+    <Content loading={false}>
       <>
         <br />
         <div className="mx-1.5">

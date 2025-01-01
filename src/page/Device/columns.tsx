@@ -2,6 +2,7 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import DetailIcon from 'assets/icons/detail-icon.svg'
 import MoreIcon from 'components/atoms/icons/MoreIcon'
 import PopoverAction from 'components/atoms/PopoverAction'
+import { Device } from 'models/Device.model'
 import { ACTION_TYPE } from 'utils/Constants'
 
 interface Props {
@@ -30,36 +31,37 @@ export const ProductColumns = (props: Props) => {
         {
             width: 150,
             fixed: 'left' as 'left',
-            dataIndex: 'name',
-            title: 'Tên sản phẩm',
-            key: 'name',
+            dataIndex: 'deviceName',
+            title: 'Tên thiết bị',
+            key: 'deviceName',
         },
         {
-            width: 250,
+            width: 300,
             fixed: 'left' as 'left',
-            dataIndex: 'price',
-            title: 'Giá sản phẩm',
-            key: 'price',
+            title: 'Nhà cung cấp',
+            render: (text: any, record: Device) => {
+                return record?.supplier?.supplierName || ''
+            }
         },
         {
-            width: 150,
-            dataIndex: 'category_id',
-            title: 'Danh mục',
-            key: 'category_id',
+            width: 300,
+            dataIndex: 'storeId',
+            title: 'Cửa hàng',
+            key: 'storeId',
             align: 'center' as 'center',
         },
         {
-            width: 150,
-            dataIndex: 'description',
-            title: 'Thông tin',
-            key: 'description',
+            width: 100,
+            dataIndex: 'quantity',
+            title: 'Số lượng',
+            key: 'quantity',
             align: 'center' as 'center',
         },
 
         {
             width: 80,
             dataIndex: 'action',
-            title: 'Chức năng',
+            title: 'Action',
             key: 'action',
             fixed: 'right' as 'right',
             render: (text: any, record: any) => {

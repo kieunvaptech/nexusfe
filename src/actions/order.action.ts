@@ -1,34 +1,42 @@
-// import { _DELETE, _GET,_POST, _PUT } from "../connection"
-// import { OrdersRequest } from "./OrdersRequest";
-// import { ProductAddRequest } from "./ProductAddRequest";
-// import { ReportRequest } from "./ReportRequest";
 
-// function useOrderActions() {
+import { Order } from "models/Order.model";
+import { _DELETE, _GET,_POST, _PUT, _UPLOAD } from "../connection";
 
-//     return {
-//         getOrders,
-//         updateOrder,
-//         detailOrder,
-//         deleteOrder
-//     }
+function useOrderActions() {
 
-//     function getOrders(param: OrdersRequest) {
-//         return _GET("orders/get-orders-by-keyword", param)
-//     }
+    return {
+        getOrders,
+        addOrder,
+        updateOrder,
+        detailOrder,
+        deleteOrder,
+        addProductImage
+    }
 
-//     function updateOrder(body: any) {
-//         return _PUT(`orders/${body.id}`, body)
-//     }
+    function getOrders(param: any) {
+        return _GET("Order", param)
+    }
 
-//     function detailOrder(id: number) {
-//         return _GET(`orders/${id}`)
-//     }
+    function addOrder(body: Order) {
+        return _POST("Order", body)
+    }
 
-//     function deleteOrder(id: number) {
-//         return _DELETE(`orders/${id}`,)
-//     }
+    function updateOrder(body: Order) {
+        return _PUT(`Order/${body.orderId}`, body)
+    }
 
+    function detailOrder(id: number) {
+        return _GET(`Order/${id}`)
+    }
+
+    function deleteOrder(id: number) {
+        return _DELETE(`Order/${id}`,)
+    }
+
+    function addProductImage(id: number, formData: FormData) {
+        return _UPLOAD(`products/uploads/${id}`, formData)
+    }
     
-// }
+}
 
-// export { useOrderActions };
+export { useOrderActions };

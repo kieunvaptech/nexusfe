@@ -1,6 +1,4 @@
-import { useOrderActions } from 'actions/order.action'
-import { useProductActions } from 'actions/supplier.action'
-import { ProductAddRequest } from 'actions/ProductAddRequest'
+// import { useOrderActions } from 'actions/package.action'
 import {
   Button,
   Col,
@@ -9,11 +7,9 @@ import {
   Modal,
   ModalProps,
   Row,
-  Select,
   Table
 } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
-import { DefaultOptionType } from 'antd/lib/select'
 import React, { memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc'
@@ -36,7 +32,7 @@ const OrderInfoForm: React.FC<OrderInfoFormProps> = ({
 }) => {
   const { t } = useTranslation()
   const [form] = Form.useForm()
-  const orderActions = useOrderActions();
+  // const orderActions = useOrderActions();
   const [dataSource, setDataSource] = useState()
 
   useEffect(() => {
@@ -84,17 +80,17 @@ const OrderInfoForm: React.FC<OrderInfoFormProps> = ({
   }
 
   const orderUpdate = async (body: any) => {
-    try {
-      const orderResponse: any = await orderActions.updateOrder(body);
-      if (orderResponse) {
-        messageSuccessDefault({ message: "Cập nhật sản phẩm thành công" })
-        if (reload) reload()
-      }
+    // try {
+    //   const orderResponse: any = await orderActions.updateOrder(body);
+    //   if (orderResponse) {
+    //     messageSuccessDefault({ message: "Cập nhật sản phẩm thành công" })
+    //     if (reload) reload()
+    //   }
 
-    } catch (error) {
-      console.log("error", error)
-      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
-    }
+    // } catch (error) {
+    //   console.log("error", error)
+    //   messageErrorDefault({ message: "Kiểm tra lại kết nối." })
+    // }
 
   }
 

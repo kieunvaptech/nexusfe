@@ -12,8 +12,8 @@ function useSupplierActions() {
         addProductImage
     }
 
-    function getSuppliers() {
-        return _GET("Supplier")
+    function getSuppliers(param: any) {
+        return _GET("Supplier", param)
     }
 
     function addSupplier(body: Supplier) {

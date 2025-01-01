@@ -9,18 +9,19 @@ import { FORM_MODE } from 'utils/Constants';
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc';
 import { cloneDeep } from 'lodash-es'
 
-const CustomerPage = () => {
-//   const [form] = Form.useForm()
+const ConnectionPage = () => {
+  const [form] = Form.useForm()
+//   const productActions = useProductActions();
 //   const categoryActions = useCategoryActions();
-//   const [dataSourceProduct, setDataSourceProduct] = useState();
-//   const [pageIndex, setPageIndex] = useState<number>(1)
-//   const [pageSize, setPageSize] = useState<number>(10)
-//   const [total, setTotal] = useState(0)
-//   const [openInfo, setOpenInfo] = useState<boolean>(false)
-//   const [categorysOption, setcategorysOption] = useState<DefaultOptionType[]>([])
-//   const [idSelected, setIdSelected] = useState<number | null>(null)
-//   const [mode, setMode] = useState<number>(1)
-//   const [dataSearch, setDataSearch] = useState({})
+  const [dataSourceProduct, setDataSourceProduct] = useState();
+  const [pageIndex, setPageIndex] = useState<number>(1)
+  const [pageSize, setPageSize] = useState<number>(10)
+  const [total, setTotal] = useState(0)
+  const [openInfo, setOpenInfo] = useState<boolean>(false)
+  const [categorysOption, setcategorysOption] = useState<DefaultOptionType[]>([])
+  const [idSelected, setIdSelected] = useState<number | null>(null)
+  const [mode, setMode] = useState<number>(1)
+  const [dataSearch, setDataSearch] = useState({})
 
 //   useEffect(() => {
 //     init()
@@ -128,11 +129,11 @@ const CustomerPage = () => {
 //   }
 
   return (
-    <Content loading={false}>
+    <Content>
       <>
         <br />
         <div className="mx-1.5">
-          <Typography.Title level={4} >Customers Management</Typography.Title>
+          <Typography.Title level={4} >Equipments Management</Typography.Title>
         </div>
 
         {/* <ProductSearchForm
@@ -184,4 +185,4 @@ const CustomerPage = () => {
   )
 }
 
-export default CustomerPage
+export default ConnectionPage

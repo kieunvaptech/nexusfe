@@ -1,6 +1,5 @@
 import { Store } from "models/Store.model";
-import { _DELETE, _GET, _POST, _PUT } from "../connection"
-import { ReportRequest } from "./ReportRequest";
+import { _DELETE, _GET, _POST, _PUT } from "../connection";
 
 function useStoreActions() {
 

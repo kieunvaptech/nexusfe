@@ -1,28 +1,25 @@
-import { Form, Table, Typography, Modal } from 'antd';
-import Content from 'layout/Content';
+import { Form, Table, Typography } from 'antd'
+import Content from 'layout/Content'
 import { Pagination } from 'components/organisms/Pagination';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react'
 import { ProductColumns } from "./columns";
-import EmployeeSearchForm from './component/EmployeeSearchForm';
+import ProductSearchForm from './component/ProductSearchForm';
 import { DefaultOptionType } from 'antd/lib/select';
 import { FORM_MODE } from 'utils/Constants';
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc';
-import { cloneDeep } from 'lodash-es';
-import { useEmployeeActions } from 'actions/employee.action';
-import { Employee } from 'models/Employee.model';
-import EmployeeInfoForm from './component/EmployeeInfoForm';
-const { confirm } = Modal;
+import { cloneDeep } from 'lodash-es'
+import { usePackageActions } from 'actions/package.action';
 
-const EmployeePage = () => {
+const PackagePage = () => {
   const [form] = Form.useForm()
-  const employeeActions = useEmployeeActions();
+  const packageActions = usePackageActions();
   const [dataSourceProduct, setDataSourceProduct] = useState();
   const [pageIndex, setPageIndex] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
   const [total, setTotal] = useState(0)
   const [openInfo, setOpenInfo] = useState<boolean>(false)
   const [categorysOption, setcategorysOption] = useState<DefaultOptionType[]>([])
-  const [rowData, setRowData] = useState<Employee>()
+  const [idSelected, setIdSelected] = useState<number | null>(null)
   const [mode, setMode] = useState<number>(1)
   const [dataSearch, setDataSearch] = useState({})
 
@@ -31,10 +28,10 @@ const EmployeePage = () => {
   }, [])
 
   const init = () => {
-    getEmployees(1)
+    getPackages(1)
   }
 
-  const getEmployees = async (pageIndex: number, search?: any) => {
+  const getPackages = async (pageIndex: number, search?: any) => {
     try {
       if (!search) {
         search = cloneDeep(dataSearch)
@@ -45,10 +42,10 @@ const EmployeePage = () => {
         limit: pageSize,
         ...search
       }
-      const employeesResponse = await employeeActions.getEmployees(param);
-      if (employeesResponse) {
-        setDataSourceProduct(employeesResponse);
-        // setTotal(employeesResponse.totalPages * pageSize)
+      const packagesResponse = await packageActions.getPackages(param);
+      if (packagesResponse) {
+        setDataSourceProduct(packagesResponse);
+        // setTotal(productsResponse.totalPages * pageSize)
       }
 
     } catch (error) {
@@ -64,7 +61,7 @@ const EmployeePage = () => {
     try {
       const values = form.getFieldsValue()
       setDataSearch(values)
-      getEmployees(1, values)
+      getPackages(1, values)
 
     } catch (error) {
       messageErrorDefault({ message: "Kiểm tra lại kết nối." })
@@ -76,7 +73,7 @@ const EmployeePage = () => {
     try {
       form.resetFields()
       setDataSearch({})
-      getEmployees(1,{})
+      getPackages(1,{})
 
     } catch (error) {
       messageErrorDefault({ message: "Kiểm tra lại kết nối." })
@@ -84,23 +81,11 @@ const EmployeePage = () => {
     }
   }
 
-  const showConfirm = (record: Employee) => {
-    confirm({
-      title: 'Confirm',
-      content: 'Do you want to delete?',
-      okText: 'Yes',
-      cancelText: 'No',
-      onOk() {
-        deleteEmployee(record?.employeeId || 0)
-      }
-    });
-  };
-
-  const deleteEmployee = async (id: number) => {
+  const deleteProduct = async (id: number) => {
     try {
-      const response = await employeeActions.deleteEmployee(id);
+      const response = await packageActions.deletePackage(id);
       if (response) {
-        getEmployees(1)
+        getPackages(1)
         messageSuccessDefault({ message: "Xoá sản phẩm thành công" })
       }
 
@@ -113,13 +98,13 @@ const EmployeePage = () => {
   }
 
   const add = () => {
-    setRowData(undefined)
+    setIdSelected(null)
     setMode(FORM_MODE.NEW)
     setOpenInfo(true)
   }
 
   const reloadData = () => {
-    getEmployees(1)
+    getPackages(1)
     setOpenInfo(false)
   }
 
@@ -128,37 +113,37 @@ const EmployeePage = () => {
       <>
         <br />
         <div className="mx-1.5">
-          <Typography.Title level={4} >Quản lý nhân viên</Typography.Title>
+          <Typography.Title level={4} >Plans Management</Typography.Title>
         </div>
 
-        <EmployeeSearchForm
+        <ProductSearchForm
           form={form}
           categorysOption={categorysOption}
           onSearch={searchProducts}
           onReset={resetSearch}
           onInfo={() => add()} />
-        <EmployeeInfoForm
-          data={rowData}
+        {/* <ProductInfoForm
+          id={idSelected}
           mode={mode}
           categorysOption={categorysOption}
           open={openInfo}
           reload={reloadData}
           handleCancel={() => setOpenInfo(false)}
-        />
+        /> */}
         <Table
           columns={ProductColumns({
-            actionXem: (record: Employee) => {
+            actionXem: (record: any) => {
               setMode(FORM_MODE.VIEW)
               setOpenInfo(true)
-              setRowData(record)
+              setIdSelected(record.id)
             },
-            actionCapNhat: (record: Employee) => {
+            actionCapNhat: (record: any) => {
               setMode(FORM_MODE.UPDATE)
               setOpenInfo(true)
-              setRowData(record)
+              setIdSelected(record.id)
             },
-            actionXoa: (record: Employee) => {
-              showConfirm(record)
+            actionXoa: (record: any) => {
+              deleteProduct(record.id)
             },
           })}
           dataSource={dataSourceProduct}
@@ -171,7 +156,7 @@ const EmployeePage = () => {
               pageSize={pageSize}
               setPageSize={setPageSize}
               pageIndex={pageIndex}
-              setPageIndex={getEmployees}
+              setPageIndex={getPackages}
             />
           )}
         </div>
@@ -180,4 +165,4 @@ const EmployeePage = () => {
   )
 }
 
-export default EmployeePage
+export default PackagePage

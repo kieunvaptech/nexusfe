@@ -6,14 +6,15 @@ import { NotFound } from 'page/404_Page'
 import Forbidden from 'page/403_Page'
 import { ErrorPage } from 'page/500_Page'
 import Dashboard from 'page/Dashboard'
-// import BillingPage from 'page/Billings/index'
+import BillingPage from 'page/Billings/index'
 import OrderPage from 'page/Orders/index'
-// import CustomerPage from 'page/Customers/index'
+import CustomerPage from 'page/Customers/index'
 import StorePage from 'page/Stores/index'
-// import PlanPage from 'page/Plans/index'
+import PackagePage from 'page/Packages/index'
 // import EquipmentPage from 'page/Equipments/index'
-// import EmployeePage from 'page/Employees/index'
+import EmployeePage from 'page/Employees/index'
 import VendorPage from 'page/Vendors/index'
+import DevicePage from 'page/Device'
 
 interface PrivateRouteProps {
   children: ReactNode
@@ -45,14 +46,14 @@ function App() {
       >
         <Route index element={<Dashboard />} />
 
-        {/* <Route path="/billings" element={<BillingPage />} /> */}
-        <Route path="/orders" element={<OrderPage />} />
-        {/* <Route path="/customers" element={<CustomerPage />} /> */}
-        <Route path="/stores" element={<StorePage />} />
-        {/* <Route path="/plans" element={<PlanPage />} />
-        <Route path="/equipments" element={<EquipmentPage />} />
-        <Route path="/employees" element={<EmployeePage />} /> */}
-        <Route path="/vendors" element={<VendorPage />} />
+        <Route path="/thanh-toan" element={<BillingPage />} />
+        <Route path="/don-hang" element={<OrderPage />} />
+        <Route path="/khach-hang" element={<CustomerPage />} />
+        <Route path="/cua-hang" element={<StorePage />} />
+        <Route path="/goi-san-pham" element={<PackagePage />} />
+        <Route path="/thiet-bi" element={<DevicePage />} />
+        <Route path="/nhan-vien" element={<EmployeePage />} /> 
+        <Route path="/nha-cung-cap" element={<VendorPage />} />
 
       </Route>
       <Route path="/login" element={<Login />} />

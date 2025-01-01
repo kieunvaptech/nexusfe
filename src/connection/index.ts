@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const TIMEOUT_SECOND = 180000
-export const BASE_URL = "https://127.0.0.1:7222/api/"
+export const BASE_URL = "https://localhost:7222/api/"
 export const BASE_IMAGE = BASE_URL+'products/images/'
 
 const instance = axios.create({

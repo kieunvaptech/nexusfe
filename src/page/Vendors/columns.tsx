@@ -22,7 +22,7 @@ export const ProductColumns = (props: Props) => {
             width: 50,
             fixed: 'left' as 'left',
             align: 'center' as 'center',
-            title: 'Number',
+            title: 'STT',
             render: (value: any, row: any, index: number) => {
                 return index + 1
             },
@@ -31,20 +31,13 @@ export const ProductColumns = (props: Props) => {
             width: 150,
             fixed: 'left' as 'left',
             dataIndex: 'supplierName',
-            title: 'supplierName',
+            title: 'Tên nhà cung cấp',
             key: 'supplierName',
-        },
-        {
-            width: 250,
-            fixed: 'left' as 'left',
-            dataIndex: 'contactName',
-            title: 'contactName',
-            key: 'contactName',
         },
         {
             width: 150,
             dataIndex: 'phoneNumber',
-            title: 'phoneNumber',
+            title: 'Số điện thoại',
             key: 'phoneNumber',
             align: 'center' as 'center',
         },
@@ -56,9 +49,9 @@ export const ProductColumns = (props: Props) => {
             align: 'center' as 'center',
         },
         {
-            width: 150,
+            width: 300,
             dataIndex: 'address',
-            title: 'address',
+            title: 'Địa chỉ',
             key: 'address',
             align: 'center' as 'center',
         },
@@ -72,11 +65,11 @@ export const ProductColumns = (props: Props) => {
                 return (
                     <PopoverAction
                         listAction={[
-                            {
-                                icon: <img src={DetailIcon} alt="view-detail-icon" />,
-                                text: ACTION_TYPE.XEM,
-                                action: () => actionXem(record),
-                            },
+                            // {
+                            //     icon: <img src={DetailIcon} alt="view-detail-icon" />,
+                            //     text: ACTION_TYPE.XEM,
+                            //     action: () => actionXem(record),
+                            // },
                             {
                                 icon: <EditOutlined className="text-xl text-gray-400" />,
                                 text: ACTION_TYPE.CAP_NHAT,

@@ -37,16 +37,16 @@ export const CategoryColumns = (props: Props) => {
         {
             width: 150,
             fixed: 'left' as 'left',
-            dataIndex: 'address',
-            title: 'Address',
-            key: 'address',
+            dataIndex: 'phoneNumber',
+            title: 'Phone',
+            key: 'phoneNumber',
         },
         {
             width: 150,
             fixed: 'left' as 'left',
-            dataIndex: 'phoneNumber',
-            title: 'Phone',
-            key: 'phoneNumber',
+            dataIndex: 'address',
+            title: 'Address',
+            key: 'address',
         },
         {
             width: 80,
