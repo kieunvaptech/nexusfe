@@ -4,6 +4,7 @@ import {
   Col,
   Form,
   Input,
+  InputNumber,
   Modal,
   ModalProps,
   Row,
@@ -20,10 +21,13 @@ import { UploadOutlined } from '@ant-design/icons'
 import { BASE_IMAGE } from 'connection'
 import { Employee } from 'models/Employee.model'
 import { useEmployeeActions } from 'actions/employee.action'
+import CryptoJS from 'crypto-js';
 
 interface ProductInfoFormProps extends ModalProps {
   handleCancel: () => void
   categorysOption: DefaultOptionType[]
+  storesOption: DefaultOptionType[]
+  rolesOption: DefaultOptionType[]
   reload?: () => void
   data?: Employee
   mode: number
@@ -32,98 +36,55 @@ interface ProductInfoFormProps extends ModalProps {
 const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
   handleCancel,
   categorysOption,
+  storesOption,
+  rolesOption,
   reload,
   data,
   mode,
   ...props
 }) => {
 
-  const { t } = useTranslation()
   const [form] = Form.useForm()
   const employeeActions = useEmployeeActions();
 
-  const [fileListOld, setFileListOld] = useState<any[]>([]);
-  const [fileList, setFileList] = useState<any[]>([]);
-
-  const handleChange = ({ fileList }: any) => {
-    setFileList(fileList);
-  };
-
-  // const customRequest = async ({ file, onSuccess, onError }: any) => {
-  //   const formData = new FormData();
-  //   formData.append('files', file);
-
-  //   try {
-  //     if (data) {
-  //       const imageResponse: any = await employeeActions.addProductImage(id, formData);
-  //       if (imageResponse) {
-  //         onSuccess(imageResponse);
-  //         console.log("imageResponse", imageResponse)
-  //       }
-  //     }
-
-
-  //   } catch (error) {
-  //     console.log("error", error)
-  //     onError(error);
-  //   }
-  // };
-
   useEffect(() => {
-    form.resetFields()
+    form.resetFields();
     if (props.open) {
       if (data) {
-        form.setFieldsValue(data)
+        form.setFieldsValue(data);
       } else {
-        resetForm()
+        resetForm();
       }
     }
 
     return () => {
-
-      resetForm()
+      resetForm();
     }
   }, [props.open])
 
   function resetForm() {
-    form.resetFields()
-    setFileList([])
+    form.resetFields();
   }
-
-  // const productDetail = async (id: number) => {
-  //   try {
-  //     const productResponse: any = await employeeActions.detailProduct(id);
-  //     if (productResponse) {
-  //       form.setFieldsValue(productResponse)
-  //       const files = productResponse.product_images.map((file: any) => ({
-  //         ...file,
-  //         url: `${BASE_IMAGE}${file.image_url}`
-  //       }))
-  //       setFileListOld(files)
-  //     }
-  //   } catch (error) {
-  //     console.log("error", error)
-  //     messageErrorDefault({ message: "Kiểm tra lại kết nối." })
-
-  //   }
-
-  // }
 
   const handleSubmit = async () => {
     if (!form) return
     try {
 
-      const values = await form.validateFields()
+      const values = await form.validateFields();
+      values.phoneNumber = values.phoneNumber.toString();
       if (values) {
         if (data) {
           const body = {
             employeeId: data?.employeeId,
             ...values
           }
-          productUpdate(body)
+          updateEmployee(body)
         }
-        else
-          productAdd(values)
+        else{
+          // if(values.password) values.passwordHash = CryptoJS.SHA256(values.password).toString(CryptoJS.enc.Hex);
+          addEmployee(values)
+        }
+          
 
       }
     } catch (errInfo) {
@@ -131,7 +92,7 @@ const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
     }
   }
 
-  const productAdd = async (body: Employee) => {
+  const addEmployee = async (body: Employee) => {
     try {
       const response: any = await employeeActions.addEmployee(body);
       if (response) {
@@ -141,13 +102,13 @@ const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
 
     } catch (error) {
       console.log("error", error)
-      messageErrorDefault({ message:  messageType.CHECK_INTERNET })
+      messageErrorDefault({ message: messageType.CHECK_INTERNET })
 
     }
 
   }
 
-  const productUpdate = async (body: Employee) => {
+  const updateEmployee = async (body: Employee) => {
     try {
       const response: any = await employeeActions.updateEmployee(body);
       if (response) {
@@ -164,9 +125,9 @@ const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
   }
 
   const getTitle = () => {
-    if (mode === FORM_MODE.NEW) return 'Add Employee'
-    if (mode === FORM_MODE.UPDATE) return 'Update Employee'
-    if (mode === FORM_MODE.VIEW) return 'Employee Detail'
+    if (mode === FORM_MODE.NEW) return 'Thêm mới nhân viên'
+    if (mode === FORM_MODE.UPDATE) return 'Cập nhật thông tin nhân viên'
+    if (mode === FORM_MODE.VIEW) return 'Xem chi tiết thông tin nhân viên'
   }
 
   return (
@@ -182,7 +143,7 @@ const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
               }}
               className="w-[144px] min-h-[40px]"
             >
-              {mode === FORM_MODE.NEW ? 'Add' : 'Update'}
+              {mode === FORM_MODE.NEW ? messageType.ADD_NEW : messageType.UPDATE}
             </Button>
           }
           <Button
@@ -203,9 +164,9 @@ const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
         <Row className="justify-between">
           <Col span={11}>
             <Form.Item
-              label="Tên sản phẩm"
-              name="name"
-              rules={[{ required: true, message: 'Đơn vị quản lý không được để trống' }]}
+              label="Họ và tên"
+              name="fullName"
+              rules={[{ required: true, message: 'Họ và tên không được để trống' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
@@ -214,9 +175,9 @@ const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
           </Col>
           <Col span={11}>
             <Form.Item
-              label="Giá tiền"
-              name="price"
-              rules={[{ required: true, message: 'Mã TCTGBHTG không được để trống' }]}
+              label="Email"
+              name="email"
+              rules={[{ required: true, message: 'Email không được để trống' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
@@ -227,25 +188,77 @@ const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
         <Row className="justify-between">
           <Col span={11}>
             <Form.Item
-              label="Danh mục sản phẩm"
-              name="category_id"
-              rules={[{ required: true, message: 'Đơn vị quản lý không được để trống' }]}
+              label="Số điện thoại"
+              name="phoneNumber"
+              rules={[{ required: true, message: 'Số điện thoại không được để trống' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
-              <Select options={categorysOption} disabled={mode === FORM_MODE.VIEW} />
+              <Input />
             </Form.Item>
           </Col>
           <Col span={11}>
             <Form.Item
-              label="Thông tin chi tiết"
-              name="description"
+              label="Địa chỉ"
+              name="address"
               labelAlign='left'
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: 'Địa chỉ không được để trống' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
               <TextArea disabled={mode === FORM_MODE.VIEW} />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row className="justify-between">
+          <Col span={11}>
+            <Form.Item
+              label="Tên đăng nhập"
+              name="username"
+              // rules={[{ required: true, message: 'Đơn vị quản lý không được để trống' }]}
+              labelCol={{ span: 6 }}
+              wrapperCol={{ span: 16 }}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={11}>
+            <Form.Item
+              label="Mật khẩu"
+              name="passwordHash"
+              labelAlign='left'
+              // rules={[{ required: true }]}
+              labelCol={{ span: 6 }}
+              wrapperCol={{ span: 16 }}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row className="justify-between">
+          <Col span={11}>
+            <Form.Item
+              label="Vai trò"
+              name="roleId"
+              rules={[{ required: true, message: 'Vai trò không được để trống' }]}
+              labelCol={{ span: 6 }}
+              wrapperCol={{ span: 16 }}
+            >
+              <Select options={rolesOption} disabled={mode === FORM_MODE.VIEW} />
+            </Form.Item>
+          </Col>
+          <Col span={11}>
+            <Form.Item
+              label="Cửa hàng"
+              name="storeId"
+              labelAlign='left'
+              rules={[{ required: true, message: 'Cửa hàng không được để trống' }]}
+              labelCol={{ span: 6 }}
+              wrapperCol={{ span: 16 }}
+            >
+              <Select options={storesOption} disabled={mode === FORM_MODE.VIEW} />
             </Form.Item>
           </Col>
         </Row>

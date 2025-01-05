@@ -11,7 +11,7 @@ interface FormProps extends ModalProps {
   categorysOption: DefaultOptionType[]
 }
 
-const ProductSearchForm: React.FC<FormProps> = ({
+const PaymentSearchForm: React.FC<FormProps> = ({
   form,
   onSearch,
   onReset,
@@ -74,4 +74,4 @@ const ProductSearchForm: React.FC<FormProps> = ({
   )
 }
 
-export default memo(ProductSearchForm)
+export default memo(PaymentSearchForm)

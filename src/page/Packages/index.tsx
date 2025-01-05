@@ -3,23 +3,25 @@ import Content from 'layout/Content'
 import { Pagination } from 'components/organisms/Pagination';
 import { memo, useEffect, useState } from 'react'
 import { ProductColumns } from "./columns";
-import ProductSearchForm from './component/ProductSearchForm';
+import PackageSearchForm from './component/PackageSearchForm';
 import { DefaultOptionType } from 'antd/lib/select';
 import { FORM_MODE } from 'utils/Constants';
-import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc';
+import { messageErrorDefault, messageSuccessDefault, showConfirm } from 'utils/CommonFc';
 import { cloneDeep } from 'lodash-es'
 import { usePackageActions } from 'actions/package.action';
+import PackageInfoForm from './component/PackageInfoForm';
+import { Package } from 'models/Package.model';
 
 const PackagePage = () => {
   const [form] = Form.useForm()
   const packageActions = usePackageActions();
-  const [dataSourceProduct, setDataSourceProduct] = useState();
+  const [dataSource, setDataSource] = useState();
   const [pageIndex, setPageIndex] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
   const [total, setTotal] = useState(0)
   const [openInfo, setOpenInfo] = useState<boolean>(false)
   const [categorysOption, setcategorysOption] = useState<DefaultOptionType[]>([])
-  const [idSelected, setIdSelected] = useState<number | null>(null)
+  const [rowData, setRowData] = useState<Package>()
   const [mode, setMode] = useState<number>(1)
   const [dataSearch, setDataSearch] = useState({})
 
@@ -39,13 +41,13 @@ const PackagePage = () => {
       setPageIndex(pageIndex)
       const param = {
         page: pageIndex,
-        limit: pageSize,
-        ...search
+        size: pageSize,
+        query: JSON.stringify(search)
       }
       const packagesResponse = await packageActions.getPackages(param);
       if (packagesResponse) {
-        setDataSourceProduct(packagesResponse);
-        // setTotal(productsResponse.totalPages * pageSize)
+        setDataSource(packagesResponse?.packages);
+        setTotal(packagesResponse?.count)
       }
 
     } catch (error) {
@@ -57,7 +59,7 @@ const PackagePage = () => {
 
   }
 
-  const searchProducts = async () => {
+  const search = async () => {
     try {
       const values = form.getFieldsValue()
       setDataSearch(values)
@@ -73,7 +75,7 @@ const PackagePage = () => {
     try {
       form.resetFields()
       setDataSearch({})
-      getPackages(1,{})
+      getPackages(1, {})
 
     } catch (error) {
       messageErrorDefault({ message: "Kiểm tra lại kết nối." })
@@ -81,26 +83,22 @@ const PackagePage = () => {
     }
   }
 
-  const deleteProduct = async (id: number) => {
+  const deletePackage = async (id: number) => {
     try {
-      const response = await packageActions.deletePackage(id);
-      if (response) {
-        getPackages(1)
-        messageSuccessDefault({ message: "Xoá sản phẩm thành công" })
-      }
-
+      await packageActions.deletePackage(id);
+      messageSuccessDefault({ message: "Xoá gói cước thành công" });
+      getPackages(1);      
     } catch (error) {
       console.log("error", error)
-      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
-
+      messageErrorDefault({ message: "Kiểm tra lại kết nối." });
     }
 
   }
 
   const add = () => {
-    setIdSelected(null)
-    setMode(FORM_MODE.NEW)
-    setOpenInfo(true)
+    setRowData(undefined);
+    setMode(FORM_MODE.NEW);
+    setOpenInfo(true);
   }
 
   const reloadData = () => {
@@ -113,44 +111,46 @@ const PackagePage = () => {
       <>
         <br />
         <div className="mx-1.5">
-          <Typography.Title level={4} >Plans Management</Typography.Title>
+          <Typography.Title level={4} >Quản lý gói cước</Typography.Title>
         </div>
 
-        <ProductSearchForm
+        <PackageSearchForm
           form={form}
           categorysOption={categorysOption}
-          onSearch={searchProducts}
+          onSearch={search}
           onReset={resetSearch}
           onInfo={() => add()} />
-        {/* <ProductInfoForm
-          id={idSelected}
+        <PackageInfoForm
+          data={rowData}
           mode={mode}
           categorysOption={categorysOption}
           open={openInfo}
           reload={reloadData}
           handleCancel={() => setOpenInfo(false)}
-        /> */}
+        />
         <Table
           columns={ProductColumns({
-            actionXem: (record: any) => {
+            actionXem: (record: Package) => {
               setMode(FORM_MODE.VIEW)
               setOpenInfo(true)
-              setIdSelected(record.id)
+              setRowData(record)
             },
-            actionCapNhat: (record: any) => {
+            actionCapNhat: (record: Package) => {
               setMode(FORM_MODE.UPDATE)
               setOpenInfo(true)
-              setIdSelected(record.id)
+              setRowData(record)
             },
-            actionXoa: (record: any) => {
-              deleteProduct(record.id)
+            actionXoa: (record: Package) => {
+              showConfirm(()=>{
+                deletePackage(record?.packageId || 0)
+              });
             },
           })}
-          dataSource={dataSourceProduct}
+          dataSource={dataSource}
           pagination={false}
         />
         <div style={{ padding: 5 }}>
-          {dataSourceProduct && (
+          {dataSource && (
             <Pagination
               totalItems={total}
               pageSize={pageSize}

@@ -4,6 +4,7 @@ import {
   Col,
   Form,
   Input,
+  InputNumber,
   Modal,
   ModalProps,
   Row
@@ -59,6 +60,7 @@ const SupplierInfoForm: React.FC<SupplierInfoFormProps> = ({
     try {
 
       const values = await form.validateFields()
+      values.phoneNumber = values.phoneNumber.toString();
       if (values) {
         if (data) {
           const body = {
@@ -146,7 +148,7 @@ const SupplierInfoForm: React.FC<SupplierInfoFormProps> = ({
             <Form.Item
               label="Tên nhà cung cấp"
               name="supplierName"
-              rules={[{ required: true, message: 'supplierName is require' }]}
+              rules={[{ required: true, message: 'Tên nhà cung cấp không được để trống' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
@@ -157,7 +159,7 @@ const SupplierInfoForm: React.FC<SupplierInfoFormProps> = ({
             <Form.Item
               label="Số điện thoại"
               name="phoneNumber"
-              rules={[{ required: true, message: 'phoneNumber is require' }]}
+              rules={[{ required: true, message: 'Số điện thoại không được để trống' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
@@ -170,7 +172,7 @@ const SupplierInfoForm: React.FC<SupplierInfoFormProps> = ({
             <Form.Item
               label="email"
               name="email"
-              rules={[{ required: true, message: 'email is require' }]}
+              rules={[{ required: true, message: 'Email không được để trống' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
@@ -181,7 +183,7 @@ const SupplierInfoForm: React.FC<SupplierInfoFormProps> = ({
             <Form.Item
               label="Địa chỉ"
               name="address"
-              rules={[{ required: true, message: 'address is require' }]}
+              rules={[{ required: true, message: 'Địa chỉ không được để trống' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >

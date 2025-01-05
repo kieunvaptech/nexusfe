@@ -8,8 +8,7 @@ function useSupplierActions() {
         addSupplier,
         updateSupplier,
         detailSupplier,
-        deleteSupplier,
-        addProductImage
+        deleteSupplier
     }
 
     function getSuppliers(param: any) {
@@ -31,11 +30,6 @@ function useSupplierActions() {
     function deleteSupplier(id: number) {
         return _DELETE(`Supplier/${id}`,)
     }
-
-    function addProductImage(id: number, formData: FormData) {
-        return _UPLOAD(`products/uploads/${id}`, formData)
-    }
-    
 }
 
 export { useSupplierActions };

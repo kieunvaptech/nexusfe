@@ -2,7 +2,8 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import DetailIcon from 'assets/icons/detail-icon.svg'
 import MoreIcon from 'components/atoms/icons/MoreIcon'
 import PopoverAction from 'components/atoms/PopoverAction'
-import { ACTION_TYPE } from 'utils/Constants'
+import { Employee } from 'models/Employee.model'
+import { ACTION_TYPE, ROLE } from 'utils/Constants'
 
 interface Props {
     actionXem: (record: any) => void
@@ -28,10 +29,10 @@ export const ProductColumns = (props: Props) => {
             },
         },
         {
-            width: 150,
+            width: 250,
             fixed: 'left' as 'left',
             dataIndex: 'fullName',
-            title: 'fullName',
+            title: 'Họ và tên',
             key: 'fullName',
         },
         {
@@ -44,9 +45,36 @@ export const ProductColumns = (props: Props) => {
         {
             width: 150,
             dataIndex: 'phoneNumber',
-            title: 'phoneNumber',
+            title: 'Số điện thoại',
             key: 'phoneNumber',
             align: 'center' as 'center',
+        },
+        {
+            width: 300,
+            dataIndex: 'address',
+            title: 'Địa chỉ',
+            key: 'address',
+            align: 'center' as 'center',
+        },
+        {
+            width: 100,
+            dataIndex: 'roleId',
+            title: 'Vị trí',
+            key: 'roleId',
+            align: 'center' as 'center',
+            render: (text: any, record: Employee) => {
+                return ROLE[record?.roleId || 0]
+            }
+        },
+        {
+            width: 100,
+            dataIndex: 'storeId',
+            title: 'Cửa hàng',
+            key: 'storeId',
+            align: 'center' as 'center',
+            render: (text: any, record: Employee) => {
+                return ROLE[record?.roleId || 0]
+            }
         },
         {
             width: 150,
@@ -55,27 +83,13 @@ export const ProductColumns = (props: Props) => {
             key: 'username',
             align: 'center' as 'center',
         },
-        {
-            width: 150,
-            dataIndex: 'passwordHash',
-            title: 'passwordHash',
-            key: 'passwordHash',
-            align: 'center' as 'center',
-        },
-        {
-            width: 150,
-            dataIndex: 'roleId',
-            title: 'roleId',
-            key: 'roleId',
-            align: 'center' as 'center',
-        },
-        {
-            width: 150,
-            dataIndex: 'address',
-            title: 'address',
-            key: 'address',
-            align: 'center' as 'center',
-        },
+        // {
+        //     width: 100,
+        //     dataIndex: 'passwordHash',
+        //     title: 'Mật khẩu',
+        //     key: 'passwordHash',
+        //     align: 'center' as 'center',
+        // },
         {
             width: 80,
             dataIndex: 'action',
@@ -86,11 +100,11 @@ export const ProductColumns = (props: Props) => {
                 return (
                     <PopoverAction
                         listAction={[
-                            {
-                                icon: <img src={DetailIcon} alt="view-detail-icon" />,
-                                text: ACTION_TYPE.XEM,
-                                action: () => actionXem(record),
-                            },
+                            // {
+                            //     icon: <img src={DetailIcon} alt="view-detail-icon" />,
+                            //     text: ACTION_TYPE.XEM,
+                            //     action: () => actionXem(record),
+                            // },
                             {
                                 icon: <EditOutlined className="text-xl text-gray-400" />,
                                 text: ACTION_TYPE.CAP_NHAT,

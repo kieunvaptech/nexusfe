@@ -336,13 +336,13 @@ export const customTitleRequire = (label: string) => {
 
 
 const { confirm } = Modal;
-export const showConfirm = (callback: Promise<void>) => {
+export const showConfirm = (callback: () => void) => {
   confirm({
     title: 'Xác nhận',
     content: 'Bạn chắc chắn muốn xóa?',
     okText: 'Xóa',
     cancelText: 'Quay lại',
-    onOk: () => callback,
+    onOk: callback,
   });
 };
 

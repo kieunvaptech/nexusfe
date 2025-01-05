@@ -11,7 +11,7 @@ interface FormProps extends ModalProps {
   categorysOption: DefaultOptionType[]
 }
 
-const ProductSearchForm: React.FC<FormProps> = ({
+const CustomerSearchForm: React.FC<FormProps> = ({
   form,
   onSearch,
   onReset,
@@ -25,43 +25,59 @@ const ProductSearchForm: React.FC<FormProps> = ({
         <Row gutter={48} wrap={true}>
           <Col xs={22} xl={12}>
             <Form.Item
-              label="Tên sản phẩm"
-              name="keyword"
+              label="Tên khách hàng"
+              name="FullName"
               wrapperCol={{
                 xl: { offset: 2 },
               }}
               labelCol={{ span: 6 }}
               labelAlign="left"
             >
-              <Input placeholder='Nhập tên sản phẩm' />
+              <Input placeholder='Nhập tên khách hàng' />
             </Form.Item>
           </Col>
           <Col xs={22} xl={12}>
             <Form.Item
-              label="Danh mục"
-              name="category_id"
+              label="Email"
+              name="Email"
               wrapperCol={{
                 xl: { offset: 2 },
               }}
               labelCol={{ span: 6 }}
               labelAlign="left"
             >
-              <Select options={categorysOption} placeholder="Chọn danh mục" />
+              <Input placeholder='Nhập email' />
             </Form.Item>
           </Col>
+        </Row>
+        <Row gutter={48} wrap={true}>
+          <Col xs={22} xl={12}>
+            <Form.Item
+              label="Số điện thoại"
+              name="PhoneNumber"
+              wrapperCol={{
+                xl: { offset: 2 },
+              }}
+              labelCol={{ span: 6 }}
+              labelAlign="left"
+            >
+              <Input placeholder='Nhập số điện thoại' />
+            </Form.Item>
+          </Col>
+          
         </Row>
 
         <Row gutter={48} wrap={true}>
           <Col span={8}></Col>
           <Col span={10}>
             <div className="flex space-x-4">
-              <Button onClick={onSearch}>Tìm kiếm sản phẩm</Button>
-              <Button onClick={onReset}>Xoá tìm kiếm</Button>
+              <Button onClick={onSearch}>Tìm kiếm</Button>
+              <Button onClick={onReset}>Xoá</Button>
 
             </div></Col>
           <Col span={6}>
 
-            <Button type="primary" onClick={onInfo}>Thêm mới sản phẩm</Button></Col>
+            <Button type="primary" onClick={onInfo}>Thêm mới khách hàng</Button></Col>
 
 
 
@@ -74,4 +90,4 @@ const ProductSearchForm: React.FC<FormProps> = ({
   )
 }
 
-export default memo(ProductSearchForm)
+export default memo(CustomerSearchForm)

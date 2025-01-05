@@ -1,4 +1,3 @@
-import { useDeviceActions } from 'actions/device.action'
 import {
   Button,
   Col,
@@ -8,76 +7,75 @@ import {
   Modal,
   ModalProps,
   Row,
-  Select
+  Select,
+  Upload
 } from 'antd'
+import TextArea from 'antd/lib/input/TextArea'
 import { DefaultOptionType } from 'antd/lib/select'
-import { Device } from 'models/Device.model'
-import { Store } from 'models/Store.model'
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc'
 import { FORM_MODE } from 'utils/Constants'
+import { UploadOutlined } from '@ant-design/icons'
+import { BASE_IMAGE } from 'connection'
+import { usePackageActions } from 'actions/package.action'
+import { Package } from 'models/Package.model'
 
-interface DeviceInfoFormProps extends ModalProps {
+interface FormProps extends ModalProps {
   handleCancel: () => void;
-  suppliersOption: DefaultOptionType[];
+  categorysOption: DefaultOptionType[];
   reload?: () => void;
-  store?: Store;
-  device?: Device;
+  data?: Package;
   mode: number;
 }
 
-const DeviceInfoForm: React.FC<DeviceInfoFormProps> = ({
+const PackageInfoForm: React.FC<FormProps> = ({
   handleCancel,
-  suppliersOption,
+  categorysOption,
   reload,
-  store,
-  device,
+  data,
   mode,
   ...props
 }) => {
 
   const [form] = Form.useForm()
-  const deviceActions = useDeviceActions();
+  const packageActions = usePackageActions();
 
   useEffect(() => {
     form.resetFields()
     if (props.open) {
-      if (device) {
-        form.setFieldsValue(device)
+      if (data) {
+        form.setFieldsValue(data)
       } else {
         resetForm()
-      }
-
-      if (store) {
-        form.setFieldsValue({ storeId: store?.storeId, storeName: store?.storeName })
       }
     }
 
     return () => {
+
       resetForm()
     }
   }, [props.open])
 
   function resetForm() {
-    form.resetFields()
+    form.resetFields();
   }
 
   const handleSubmit = async () => {
     if (!form) return
     try {
 
-      let values = await form.validateFields()
-      values.storeId = store?.storeId;
+      const values = await form.validateFields()
       if (values) {
-        if (device) {
+        if (data) {
           const body = {
-            deviceId: device?.deviceId,
+            packageId: data?.packageId,
             ...values
           }
-          updateDevice(body)
+          updatePackage(body)
         }
         else
-          addDevice(values)
+        addPackage(values)
 
       }
     } catch (errInfo) {
@@ -85,11 +83,11 @@ const DeviceInfoForm: React.FC<DeviceInfoFormProps> = ({
     }
   }
 
-  const addDevice = async (body: Device) => {
+  const addPackage = async (body: Package) => {
     try {
-      const response: any = await deviceActions.addDevice(body);
+      const response: any = await packageActions.addPackage(body);
       if (response) {
-        messageSuccessDefault({ message: "Thêm thiết bị thành công" })
+        messageSuccessDefault({ message: "Thêm sản phẩm thành công" })
         if (reload) reload()
       }
 
@@ -101,11 +99,11 @@ const DeviceInfoForm: React.FC<DeviceInfoFormProps> = ({
 
   }
 
-  const updateDevice = async (body: Device) => {
+  const updatePackage = async (body: Package) => {
     try {
-      const response: any = await deviceActions.updateDevice(body);
-      if (response) {
-        messageSuccessDefault({ message: "Cập nhật thiết bị thành công" })
+      const productResponse: any = await packageActions.updatePackage(body);
+      if (productResponse) {
+        messageSuccessDefault({ message: "Cập nhật sản phẩm thành công" })
         if (reload) reload()
       }
 
@@ -118,9 +116,9 @@ const DeviceInfoForm: React.FC<DeviceInfoFormProps> = ({
   }
 
   const getTitle = () => {
-    if (mode === FORM_MODE.NEW) return 'Thêm mới thiết bị'
-    if (mode === FORM_MODE.UPDATE) return 'Cập nhật thông tin thiết bị'
-    if (mode === FORM_MODE.VIEW) return 'Chi tiết thông tin thiết bị'
+    if (mode === FORM_MODE.NEW) return 'Thêm mới gói cước'
+    if (mode === FORM_MODE.UPDATE) return 'Cập nhật thông tin gói cước'
+    if (mode === FORM_MODE.VIEW) return 'Chi tiết thông tin gói cước'
   }
 
   return (
@@ -157,9 +155,9 @@ const DeviceInfoForm: React.FC<DeviceInfoFormProps> = ({
         <Row className="justify-between">
           <Col span={11}>
             <Form.Item
-              label="Tên thiết bị"
-              name="deviceName"
-              rules={[{ required: true, message: 'Tên thiết bị không được để trống' }]}
+              label="Tên gói cước"
+              name="packageName"
+              rules={[{ required: true, message: 'Tên gói cước không được để trống' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
@@ -168,41 +166,41 @@ const DeviceInfoForm: React.FC<DeviceInfoFormProps> = ({
           </Col>
           <Col span={11}>
             <Form.Item
-              label="Cửa hàng"
-              name="storeName"
-              rules={[{ required: true, message: 'Cửa hàng không được để trống' }]}
+              label="Giá tiền"
+              name="price"
+              rules={[{ required: true, message: 'Giá tiền không được để trống' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
-              <Input disabled />
+              <InputNumber style={{ width: '100%' }} />
             </Form.Item>
           </Col>
         </Row>
         <Row className="justify-between">
           <Col span={11}>
             <Form.Item
-              label="Nhà cung cấp"
-              name="supplierId"
-              rules={[{ required: true, message: 'Nhà cung cấp không được để trống' }]}
+              label="Tiền đặt cọc"
+              name="securityDeposit"
+              rules={[{ required: true, message: 'Tiền đặt cọc không được để trống' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
-              <Select options={suppliersOption} disabled={mode === FORM_MODE.VIEW} />
+              <InputNumber style={{ width: '100%' }} />
             </Form.Item>
           </Col>
           <Col span={11}>
             <Form.Item
-              label="Số lượng"
-              name="quantity"
-              rules={[{ required: true, message: 'Số lượng không được để trống' }]}
+              label="Mô tả"
+              name="description"
+              labelAlign='left'
+              rules={[{ required: true, message: 'Mô tả không được để trống' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
-              <InputNumber style={{ width: '100%' }}/>
+              <TextArea disabled={mode === FORM_MODE.VIEW} />
             </Form.Item>
           </Col>
         </Row>
-
 
       </Form>
 
@@ -211,4 +209,4 @@ const DeviceInfoForm: React.FC<DeviceInfoFormProps> = ({
   )
 }
 
-export default DeviceInfoForm
+export default memo(PackageInfoForm)

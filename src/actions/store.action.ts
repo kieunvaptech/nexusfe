@@ -11,8 +11,8 @@ function useStoreActions() {
         deleteStore
     }
 
-    function getStores() {
-        return _GET("Store")
+    function getStores(param: any) {
+        return _GET("Store", param)
     }
 
     function addStore(body: Store) {

@@ -23,110 +23,110 @@ const ConnectionPage = () => {
   const [mode, setMode] = useState<number>(1)
   const [dataSearch, setDataSearch] = useState({})
 
-//   useEffect(() => {
-//     init()
-//   }, [])
+  useEffect(() => {
+    init()
+  }, [])
 
-//   const init = () => {
-//     getCategorys()
-//     getProducts(1)
-//   }
+  const init = () => {
+    getCategorys()
+    getProducts(1)
+  }
 
-//   const getCategorys = async () => {
-//     try {
-//       const categorysResponse = await categoryActions.getCategories();
-//       if (categorysResponse) {
-//         const options: DefaultOptionType[] = categorysResponse.map((category: Category) => ({
-//           label: category.name,
-//           value: category.id
-//         }))
-//         setcategorysOption(options)
-//       }
+  const getCategorys = async () => {
+    try {
+      const categorysResponse = await categoryActions.getCategories();
+      if (categorysResponse) {
+        const options: DefaultOptionType[] = categorysResponse.map((category: Category) => ({
+          label: category.name,
+          value: category.id
+        }))
+        setcategorysOption(options)
+      }
 
-//     } catch (error) {
-//       messageErrorDefault({ message: "Kiểm tra lại kết nối." })
+    } catch (error) {
+      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
 
-//     }
-//   }
-
-
-
-//   const getProducts = async (pageIndex: number, search?: any) => {
-//     try {
-//       if (!search) {
-//         search = cloneDeep(dataSearch)
-//       }
-//       setPageIndex(pageIndex)
-//       const param = {
-//         page: pageIndex,
-//         limit: pageSize,
-//         ...search
-//       }
-//       const productsResponse = await productActions.getAllProduct(param);
-//       if (productsResponse) {
-//         setDataSourceProduct(productsResponse.products);
-//         setTotal(productsResponse.totalPages * pageSize)
-//       }
-
-//     } catch (error) {
-//       messageErrorDefault({ message: "Kiểm tra lại kết nối." })
-
-//     }
+    }
+  }
 
 
 
-//   }
+  const getProducts = async (pageIndex: number, search?: any) => {
+    try {
+      if (!search) {
+        search = cloneDeep(dataSearch)
+      }
+      setPageIndex(pageIndex)
+      const param = {
+        page: pageIndex,
+        limit: pageSize,
+        ...search
+      }
+      const productsResponse = await productActions.getAllProduct(param);
+      if (productsResponse) {
+        setDataSourceProduct(productsResponse.products);
+        setTotal(productsResponse.totalPages * pageSize)
+      }
 
-//   const searchProducts = async () => {
-//     try {
-//       const values = form.getFieldsValue()
-//       setDataSearch(values)
-//       getProducts(1, values)
+    } catch (error) {
+      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
 
-//     } catch (error) {
-//       messageErrorDefault({ message: "Kiểm tra lại kết nối." })
+    }
 
-//     }
-//   }
 
-//   const resetSearch = async () => {
-//     try {
-//       form.resetFields()
-//       setDataSearch({})
-//       getProducts(1,{})
 
-//     } catch (error) {
-//       messageErrorDefault({ message: "Kiểm tra lại kết nối." })
+  }
 
-//     }
-//   }
+  const searchProducts = async () => {
+    try {
+      const values = form.getFieldsValue()
+      setDataSearch(values)
+      getProducts(1, values)
 
-//   const deleteProduct = async (id: number) => {
-//     try {
-//       const response = await productActions.deleteProduct(id);
-//       if (response) {
-//         getProducts(1)
-//         messageSuccessDefault({ message: "Xoá sản phẩm thành công" })
-//       }
+    } catch (error) {
+      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
 
-//     } catch (error) {
-//       console.log("error", error)
-//       messageErrorDefault({ message: "Kiểm tra lại kết nối." })
+    }
+  }
 
-//     }
+  const resetSearch = async () => {
+    try {
+      form.resetFields()
+      setDataSearch({})
+      getProducts(1,{})
 
-//   }
+    } catch (error) {
+      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
 
-//   const add = () => {
-//     setIdSelected(null)
-//     setMode(FORM_MODE.NEW)
-//     setOpenInfo(true)
-//   }
+    }
+  }
 
-//   const reloadData = () => {
-//     getProducts(1)
-//     setOpenInfo(false)
-//   }
+  const deleteProduct = async (id: number) => {
+    try {
+      const response = await productActions.deleteProduct(id);
+      if (response) {
+        getProducts(1)
+        messageSuccessDefault({ message: "Xoá sản phẩm thành công" })
+      }
+
+    } catch (error) {
+      console.log("error", error)
+      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
+
+    }
+
+  }
+
+  const add = () => {
+    setIdSelected(null)
+    setMode(FORM_MODE.NEW)
+    setOpenInfo(true)
+  }
+
+  const reloadData = () => {
+    getProducts(1)
+    setOpenInfo(false)
+  }
 
   return (
     <Content>

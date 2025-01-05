@@ -51,7 +51,7 @@ export const ProductColumns = (props: Props) => {
         {
             width: 300,
             dataIndex: 'description',
-            title: 'Ghi chú',
+            title: 'Mô tả',
             key: 'description',
             align: 'center' as 'center',
         },

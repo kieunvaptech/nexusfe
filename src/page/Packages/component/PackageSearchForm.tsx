@@ -11,7 +11,7 @@ interface FormProps extends ModalProps {
   categorysOption: DefaultOptionType[]
 }
 
-const ProductSearchForm: React.FC<FormProps> = ({
+const PackageSearchForm: React.FC<FormProps> = ({
   form,
   onSearch,
   onReset,
@@ -23,20 +23,20 @@ const ProductSearchForm: React.FC<FormProps> = ({
     <Card >
       <Form form={form} className="mt-4">
         <Row gutter={48} wrap={true}>
-          <Col xs={22} xl={12}>
+          <Col xs={22} xl={24}>
             <Form.Item
-              label="Tên sản phẩm"
-              name="keyword"
+              label="Tên gói cước"
+              name="PackageName"
               wrapperCol={{
                 xl: { offset: 2 },
               }}
-              labelCol={{ span: 6 }}
+              labelCol={{ span: 2 }}
               labelAlign="left"
             >
-              <Input placeholder='Nhập tên sản phẩm' />
+              <Input placeholder='Nhập tên gói cước' />
             </Form.Item>
           </Col>
-          <Col xs={22} xl={12}>
+          {/* <Col xs={22} xl={12}>
             <Form.Item
               label="Danh mục"
               name="category_id"
@@ -48,20 +48,20 @@ const ProductSearchForm: React.FC<FormProps> = ({
             >
               <Select options={categorysOption} placeholder="Chọn danh mục" />
             </Form.Item>
-          </Col>
+          </Col> */}
         </Row>
 
         <Row gutter={48} wrap={true}>
           <Col span={8}></Col>
           <Col span={10}>
             <div className="flex space-x-4">
-              <Button onClick={onSearch}>Tìm kiếm sản phẩm</Button>
+              <Button onClick={onSearch}>Tìm kiếm gói cước</Button>
               <Button onClick={onReset}>Xoá tìm kiếm</Button>
 
             </div></Col>
           <Col span={6}>
 
-            <Button type="primary" onClick={onInfo}>Thêm mới sản phẩm</Button></Col>
+            <Button type="primary" onClick={onInfo}>Thêm mới gói cước</Button></Col>
 
 
 
@@ -74,4 +74,4 @@ const ProductSearchForm: React.FC<FormProps> = ({
   )
 }
 
-export default memo(ProductSearchForm)
+export default memo(PackageSearchForm)

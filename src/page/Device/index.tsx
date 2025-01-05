@@ -3,7 +3,7 @@ import Content from 'layout/Content'
 import { Pagination } from 'components/organisms/Pagination';
 import { memo, useEffect, useState } from 'react';
 import { ProductColumns } from "./columns";
-import ProductSearchForm from './component/ProductSearchForm';
+import DeviceSearchForm from './component/DeviceSearchForm';
 import DeviceInfoForm from './component/DeviceInfoForm';
 import { DefaultOptionType } from 'antd/lib/select';
 import { FORM_MODE } from 'utils/Constants';
@@ -90,13 +90,13 @@ const DevicePage = () => {
       setPageIndex(pageIndex)
       const param = {
         page: pageIndex,
-        limit: pageSize,
-        ...search
+        size: pageSize,
+        query: JSON.stringify(search)
       }
       const devicesResponse = await deviceActions.getDevices(param);
       if (devicesResponse) {
-        setDataSourceDevice(devicesResponse);
-        // setTotal(productsResponse.totalPages * pageSize)
+        setDataSourceDevice(devicesResponse?.devices);
+        setTotal(devicesResponse?.count);
       }
 
     } catch (error) {
@@ -134,9 +134,9 @@ const DevicePage = () => {
   
   const deleteDevice = async (id: number) => {
     try {
-      const response = await deviceActions.deleteDevice(id);
-      getDevices(1)
-      messageSuccessDefault({ message: "Xoá sản phẩm thành công" })
+      await deviceActions.deleteDevice(id);
+      messageSuccessDefault({ message: "Xoá thiết bị thành công" });
+      getDevices(1);      
     } catch (error) {
       console.log("error", error)
       messageErrorDefault({ message: "Kiểm tra lại kết nối." })
@@ -164,9 +164,9 @@ const DevicePage = () => {
           <Typography.Title level={4} >Quản lý thiết bị</Typography.Title>
         </div>
 
-        <ProductSearchForm
+        <DeviceSearchForm
           form={form}
-          categorysOption={suppliersOption}
+          suppliersOption={suppliersOption}
           onSearch={searchProducts}
           onReset={resetSearch}
           onInfo={() => add()} />
@@ -192,7 +192,9 @@ const DevicePage = () => {
               setRowData(record);
             },
             actionXoa: (record: Device) => {
-              showConfirm(deleteDevice(record?.deviceId || 0));
+              showConfirm(()=>{
+                deleteDevice(record?.deviceId || 0)
+              });
             },
           })}
           dataSource={dataSourceDevice}

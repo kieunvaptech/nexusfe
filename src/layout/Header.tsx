@@ -37,10 +37,12 @@ const HeaderMain = () => {
 
   const getUserDetail = async () => {
     const token = localStorage.getItem('token');
-    if(token){
+    if (token) {
       const decoded = jwtDecode<any>(token);
       const decodedData = JSON.parse(decoded?.Employee);
       dispatch(setUserInfo(decodedData));
+    } else {
+      handleClickLogout()
     }
   }
 

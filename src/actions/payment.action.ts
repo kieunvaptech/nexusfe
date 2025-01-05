@@ -1,41 +1,35 @@
-import { Supplier } from "models/Supplier.model";
+import { Payment } from "models/Payment.model";
 import { _DELETE, _GET,_POST, _PUT, _UPLOAD } from "../connection";
 
-function useSupplierActions() {
+function usePaymentActions() {
 
     return {
-        getSuppliers,
-        addSupplier,
-        updateSupplier,
-        detailSupplier,
-        deleteSupplier,
-        addProductImage
+        getPayments,
+        addPayment,
+        updatePayment,
+        detailPayment,
+        deletePayment
     }
 
-    function getSuppliers(param: any) {
-        return _GET("Supplier", param)
+    function getPayments(param: any) {
+        return _GET("Payment", param)
     }
 
-    function addSupplier(body: Supplier) {
-        return _POST("Supplier", body)
+    function addPayment(body: Payment) {
+        return _POST("Payment", body)
     }
 
-    function updateSupplier(body: Supplier) {
-        return _PUT(`Supplier/${body.supplierId}`, body)
+    function updatePayment(body: Payment) {
+        return _PUT(`Payment/${body.paymentId}`, body)
     }
 
-    function detailSupplier(id: number) {
-        return _GET(`Supplier/${id}`)
+    function detailPayment(id: number) {
+        return _GET(`Payment/${id}`)
     }
 
-    function deleteSupplier(id: number) {
-        return _DELETE(`Supplier/${id}`,)
+    function deletePayment(id: number) {
+        return _DELETE(`Payment/${id}`,)
     }
-
-    function addProductImage(id: number, formData: FormData) {
-        return _UPLOAD(`products/uploads/${id}`, formData)
-    }
-    
 }
 
-export { useSupplierActions };
+export { usePaymentActions };

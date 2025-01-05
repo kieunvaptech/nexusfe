@@ -1,41 +1,42 @@
-import { Form, Modal, Table, Typography } from 'antd'
+import { Form, Table, Typography, Modal } from 'antd'
 import Content from 'layout/Content'
 import { Pagination } from 'components/organisms/Pagination';
 import { memo, useEffect, useState } from 'react'
-import { CategoryColumns } from "./columns";
-import StoreSearchForm from './component/StoreSearchForm';
-import StoreInfoForm from './component/StoreInfoForm';
-import { useStoreActions } from 'actions/store.action';
+import { useSupplierActions } from "../../actions/supplier.action";
+import { ProductColumns } from "./columns";
+import SupplierSearchForm from './component/SupplierSearchForm';
+import SupplierInfoForm from './component/SupplierInfoForm';
 import { DefaultOptionType } from 'antd/lib/select';
 import { FORM_MODE, messageType } from 'utils/Constants';
-import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc';
-import { Store } from 'models/Store.model';
-import { cloneDeep } from 'lodash-es';
+import { messageErrorDefault, messageSuccessDefault, showConfirm } from 'utils/CommonFc';
+import { cloneDeep } from 'lodash-es'
+import { Supplier } from 'models/Supplier.model';
 const { confirm } = Modal;
 
-const StorePage = () => {
-
+const SupplierPage = () => {
   const [form] = Form.useForm()
-  const storeActions = useStoreActions();
-  const [dataSourceStore, setDataSourceStore] = useState<Store[]>([]);
+  const supplierActions = useSupplierActions();
+  const [dataSourceProduct, setDataSourceProduct] = useState<Supplier[]>([]);
   const [pageIndex, setPageIndex] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
   const [total, setTotal] = useState(0)
   const [openInfo, setOpenInfo] = useState<boolean>(false)
   const [categorysOption, setcategorysOption] = useState<DefaultOptionType[]>([])
-  const [rowData, setRowData] = useState<Store>()
+  const [rowData, setRowData] = useState<Supplier>()
   const [mode, setMode] = useState<number>(1)
   const [dataSearch, setDataSearch] = useState({})
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     init()
   }, [])
 
   const init = () => {
-    getStores(1)
+    getSuppliers(1)
   }
 
-  const getStores = async (pageIndex: number, search?: any) => {
+
+  const getSuppliers = async (pageIndex: number, search?: any) => {
     try {
       if (!search) {
         search = cloneDeep(dataSearch)
@@ -46,41 +47,22 @@ const StorePage = () => {
         size: pageSize,
         query: JSON.stringify(search)
       }
-      const response = await storeActions.getStores(param);
+      const response: any = await supplierActions.getSuppliers(param);
       if (response) {
-        setDataSourceStore(response?.stores);
-        setTotal(response.count)
+        setDataSourceProduct(response?.suppliers);
+        setTotal(response?.count)
       }
-
+      setLoading(false)
     } catch (error) {
       messageErrorDefault({ message: messageType.CHECK_INTERNET })
     }
-  }
-
-
-  const deleteStore = async (id: number) => {
-    try{
-      await storeActions.deleteStore(id);
-      getStores(1)
-      messageSuccessDefault({ message: "Xoá danh mục thành công" })
-      
-    }catch(error: any){
-
-    }
-    
-  }
-
-  const add = () => {
-    setRowData(undefined)
-    setMode(FORM_MODE.NEW)
-    setOpenInfo(true)
   }
 
   const search = async () => {
     try {
       const values = form.getFieldsValue();
       setDataSearch(values);
-      getStores(1, values);
+      getSuppliers(1, values);
 
     } catch (error) {
       messageErrorDefault({ message: messageType.CHECK_INTERNET })
@@ -91,45 +73,50 @@ const StorePage = () => {
     try {
       form.resetFields()
       setDataSearch({})
-      getStores(1, {})
+      getSuppliers(1, {})
 
     } catch (error) {
       messageErrorDefault({ message: messageType.CHECK_INTERNET })
     }
   }
 
+  const deleteSupplier = async (id: number) => {
+    try {
+      await supplierActions.deleteSupplier(id);
+      messageSuccessDefault({ message: "Xoá nhà cung cấp thành công" });
+      getSuppliers(1);
+    } catch (error) {
+      messageErrorDefault({ message: messageType.CHECK_INTERNET })
+    }
+
+  }
+
+  const add = () => {
+    setRowData(undefined)
+    setMode(FORM_MODE.NEW)
+    setOpenInfo(true)
+  }
+
   const reloadData = () => {
-    getStores(1)
+    getSuppliers(1)
     setOpenInfo(false)
   }
 
-  const showConfirm = (record: any) => {
-    confirm({
-      title: 'Xác nhận.',
-      content: 'Bạn chắc chắn muốn xoá danh mục',
-      okText: 'Đồng ý',
-      cancelText: 'Huỷ',
-      onOk() {
-        deleteStore(record.storeId)
-      }
-    });
-  };
-
   return (
-    <Content loading={false}>
+    <Content loading={loading}>
       <>
         <br />
         <div className="mx-1.5">
-          <Typography.Title level={4}>Quản lý cửa hàng</Typography.Title>
+          <Typography.Title level={4} >Quản lý nhà cung cấp</Typography.Title>
         </div>
 
-        <StoreSearchForm
+        <SupplierSearchForm
           form={form}
           categorysOption={categorysOption}
           onSearch={search}
           onReset={resetSearch}
           onInfo={() => add()} />
-        <StoreInfoForm
+        <SupplierInfoForm
           data={rowData}
           mode={mode}
           categorysOption={categorysOption}
@@ -138,32 +125,34 @@ const StorePage = () => {
           handleCancel={() => setOpenInfo(false)}
         />
         <Table
-          columns={CategoryColumns({
-            // actionXem: (record: any) => {
-            //   setMode(FORM_MODE.VIEW)
-            //   setOpenInfo(true)
-            //   setIdSelected(record.id)
-            // },
-            actionCapNhat: (record: any) => {
+          columns={ProductColumns({
+            actionXem: (record: Supplier) => {
+              setMode(FORM_MODE.VIEW)
+              setOpenInfo(true)
+              setRowData(record)
+            },
+            actionCapNhat: (record: Supplier) => {
               setMode(FORM_MODE.UPDATE)
               setOpenInfo(true)
               setRowData(record)
             },
-            actionXoa: (record: any) => {
-              showConfirm(record)
+            actionXoa: (record: Supplier) => {
+              showConfirm(()=>{
+                deleteSupplier(record?.supplierId || 0)
+              });
             },
           })}
-          dataSource={dataSourceStore}
+          dataSource={dataSourceProduct}
           pagination={false}
         />
         <div style={{ padding: 5 }}>
-          {dataSourceStore && (
+          {dataSourceProduct && (
             <Pagination
               totalItems={total}
               pageSize={pageSize}
               setPageSize={setPageSize}
               pageIndex={pageIndex}
-              setPageIndex={getStores}
+              setPageIndex={getSuppliers}
             />
           )}
         </div>
@@ -171,4 +160,5 @@ const StorePage = () => {
     </Content>
   )
 }
-export default StorePage
+
+export default SupplierPage

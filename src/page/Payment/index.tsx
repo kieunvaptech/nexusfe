@@ -1,28 +1,26 @@
-import { Form, Table, Typography, Modal } from 'antd'
+import { Form, Table, Typography } from 'antd'
 import Content from 'layout/Content'
 import { Pagination } from 'components/organisms/Pagination';
 import { memo, useEffect, useState } from 'react'
 import { useSupplierActions } from "../../actions/supplier.action";
 import { ProductColumns } from "./columns";
-import SupplierSearchForm from './component/SupplierSearchForm';
-import SupplierInfoForm from './component/SupplierInfoForm';
+import PaymentSearchForm from './component/PaymentSearchForm';
 import { DefaultOptionType } from 'antd/lib/select';
 import { FORM_MODE, messageType } from 'utils/Constants';
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc';
 import { cloneDeep } from 'lodash-es'
-import { Supplier } from 'models/Supplier.model';
-const { confirm } = Modal;
+import { usePaymentActions } from 'actions/payment.action';
 
-const VendorPage = () => {
+const PaymentPage = () => {
   const [form] = Form.useForm()
-  const supplierActions = useSupplierActions();
-  const [dataSourceProduct, setDataSourceProduct] = useState<Supplier[]>([]);
+  const paymentActions = usePaymentActions();
+  const [dataSource, setDataSource] = useState();
   const [pageIndex, setPageIndex] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
   const [total, setTotal] = useState(0)
   const [openInfo, setOpenInfo] = useState<boolean>(false)
   const [categorysOption, setcategorysOption] = useState<DefaultOptionType[]>([])
-  const [rowData, setRowData] = useState<Supplier>()
+  const [idSelected, setIdSelected] = useState<number | null>(null)
   const [mode, setMode] = useState<number>(1)
   const [dataSearch, setDataSearch] = useState({})
 
@@ -31,43 +29,40 @@ const VendorPage = () => {
   }, [])
 
   const init = () => {
-    getSuppliers(1)
+    getPayments(1)
   }
 
-
-  const getSuppliers = async (pageIndex: number, search?: any) => {
-    try {
-      if (!search) {
-        search = cloneDeep(dataSearch)
+  const getPayments = async (pageIndex: number, search?: any) => {
+      try {
+        if (!search) {
+          search = cloneDeep(dataSearch)
+        }
+        setPageIndex(pageIndex)
+        const param = {
+          page: pageIndex,
+          size: pageSize,
+          query: JSON.stringify(search)
+        }
+        const response = await paymentActions.getPayments(param);
+        if (response) {
+          setDataSource(response?.payments);
+          setTotal(response.count)
+        }
+  
+      } catch (error) {
+        messageErrorDefault({ message: messageType.CHECK_INTERNET })
       }
-      setPageIndex(pageIndex)
-      const param = {
-        page: pageIndex,
-        limit: pageSize,
-        ...search
-      }
-      const response: Supplier[] = await supplierActions.getSuppliers();
-      if (response) {
-        setDataSourceProduct(response);
-        // setTotal(productsResponse.totalPages * pageSize)
-      }
-
-    } catch (error) {
-      messageErrorDefault({ message: messageType.CHECK_INTERNET })
     }
-
-
-
-  }
 
   const searchProducts = async () => {
     try {
       const values = form.getFieldsValue()
       setDataSearch(values)
-      getSuppliers(1, values)
+      getPayments(1, values)
 
     } catch (error) {
-      messageErrorDefault({ message: messageType.CHECK_INTERNET })
+      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
+
     }
   }
 
@@ -75,47 +70,38 @@ const VendorPage = () => {
     try {
       form.resetFields()
       setDataSearch({})
-      getSuppliers(1, {})
+      getPayments(1,{})
 
     } catch (error) {
-      messageErrorDefault({ message: messageType.CHECK_INTERNET })
+      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
+
     }
   }
 
-  const showConfirm = (record: Supplier) => {
-    confirm({
-      title: 'Confirm',
-      content: 'Do you want to delete?',
-      okText: 'Yes',
-      cancelText: 'No',
-      onOk() {
-        deleteSupplier(record?.supplierId || 0)
-      }
-    });
-  };
-
-  const deleteSupplier = async (id: number) => {
+  const deleteProduct = async (id: number) => {
     try {
-      const response = await supplierActions.deleteSupplier(id);
+      const response = await paymentActions.deletePayment(id);
       if (response) {
-        getSuppliers(1)
+        getPayments(1)
         messageSuccessDefault({ message: "Xoá sản phẩm thành công" })
       }
 
     } catch (error) {
-      messageErrorDefault({ message: messageType.CHECK_INTERNET })
+      console.log("error", error)
+      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
+
     }
 
   }
 
   const add = () => {
-    setRowData(undefined)
+    setIdSelected(null)
     setMode(FORM_MODE.NEW)
     setOpenInfo(true)
   }
 
   const reloadData = () => {
-    getSuppliers(1)
+    getPayments(1)
     setOpenInfo(false)
   }
 
@@ -124,56 +110,56 @@ const VendorPage = () => {
       <>
         <br />
         <div className="mx-1.5">
-          <Typography.Title level={4} >Quản lý nhà cung cấp</Typography.Title>
+          <Typography.Title level={4} >Quản lý thanh toán</Typography.Title>
         </div>
 
-        <SupplierSearchForm
+        {/* <ProductSearchForm
           form={form}
           categorysOption={categorysOption}
           onSearch={searchProducts}
           onReset={resetSearch}
-          onInfo={() => add()} />
-        <SupplierInfoForm
-          data={rowData}
+          onInfo={() => add()} /> */}
+        {/* <ProductInfoForm
+          id={idSelected}
           mode={mode}
           categorysOption={categorysOption}
           open={openInfo}
           reload={reloadData}
           handleCancel={() => setOpenInfo(false)}
-        />
+        /> */}
         <Table
           columns={ProductColumns({
-            actionXem: (record: Supplier) => {
+            actionXem: (record: any) => {
               setMode(FORM_MODE.VIEW)
               setOpenInfo(true)
-              setRowData(record)
+              setIdSelected(record.id)
             },
-            actionCapNhat: (record: Supplier) => {
+            actionCapNhat: (record: any) => {
               setMode(FORM_MODE.UPDATE)
               setOpenInfo(true)
-              setRowData(record)
+              setIdSelected(record.id)
             },
-            actionXoa: (record: Supplier) => {
-              showConfirm(record)
+            actionXoa: (record: any) => {
+              // deleteProduct(record.id)
             },
           })}
-          dataSource={dataSourceProduct}
+          dataSource={dataSource}
           pagination={false}
         />
         <div style={{ padding: 5 }}>
-          {dataSourceProduct && (
+          {/* {dataSourceProduct && (
             <Pagination
               totalItems={total}
               pageSize={pageSize}
               setPageSize={setPageSize}
               pageIndex={pageIndex}
-              setPageIndex={getSuppliers}
+              setPageIndex={getProducts}
             />
-          )}
+          )} */}
         </div>
       </>
     </Content>
   )
 }
 
-export default VendorPage
+export default PaymentPage

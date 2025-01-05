@@ -7,16 +7,16 @@ interface FormProps extends ModalProps {
   form: FormInstance<any>
   onSearch: () => void
   onReset: () => void
-  categorysOption: DefaultOptionType[]
+  onInfo: () => void
 }
 
 const OrderSearchForm: React.FC<FormProps> = ({
   form,
   onSearch,
   onReset,
-  categorysOption
+  onInfo
 }) => {
-  
+
 
   return (
     <Card >
@@ -39,13 +39,14 @@ const OrderSearchForm: React.FC<FormProps> = ({
 
         <Row gutter={48} wrap={true}>
           <Col span={8}></Col>
-          <Col span={10}>
+          <Col span={13}>
             <div className="flex space-x-4">
-              <Button onClick={onSearch}>Tìm kiếm sản phẩm</Button>
+              <Button onClick={onSearch}>Tìm kiếm</Button>
               <Button onClick={onReset}>Xoá tìm kiếm</Button>
 
             </div></Col>
-          <Col span={6}>
+          <Col span={3}>
+            <Button type="primary" onClick={onInfo}>Thêm mới đơn hàng</Button>
           </Col>
 
 

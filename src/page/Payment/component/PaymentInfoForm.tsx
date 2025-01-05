@@ -20,7 +20,7 @@
 // import { UploadOutlined } from '@ant-design/icons'
 // import { BASE_IMAGE } from 'connection'
 
-// interface ProductInfoFormProps extends ModalProps {
+// interface FormProps extends ModalProps {
 //   handleCancel: () => void
 //   categorysOption: DefaultOptionType[]
 //   reload?: () => void
@@ -28,7 +28,7 @@
 //   mode: number
 // }
 
-// const ProductInfoForm: React.FC<ProductInfoFormProps> = ({
+// const PaymentInfoForm: React.FC<FormProps> = ({
 //   handleCancel,
 //   categorysOption,
 //   reload,
@@ -299,4 +299,4 @@
 //   )
 // }
 
-// export default ProductInfoForm
+// export default PaymentInfoForm

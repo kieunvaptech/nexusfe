@@ -1,3 +1,4 @@
+import { Store } from "./Store.model";
 import { Supplier } from "./Supplier.model";
 
 interface Device {
@@ -7,6 +8,7 @@ interface Device {
     storeId?: number;
     quantity?: number;
     supplier?: Supplier;
+    store?: Store
 }
 
 

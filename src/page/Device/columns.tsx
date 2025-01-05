@@ -45,10 +45,11 @@ export const ProductColumns = (props: Props) => {
         },
         {
             width: 300,
-            dataIndex: 'storeId',
             title: 'Cửa hàng',
-            key: 'storeId',
             align: 'center' as 'center',
+            render: (text: any, record: Device) => {
+                return record?.store?.storeName || ''
+            }
         },
         {
             width: 100,

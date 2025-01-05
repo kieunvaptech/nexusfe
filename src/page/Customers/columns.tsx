@@ -10,7 +10,7 @@ interface Props {
     actionXoa: (record: any) => void
 }
 
-export const ProductColumns = (props: Props) => {
+export const CustomerColumns = (props: Props) => {
     const {
         actionXem,
         actionCapNhat,
@@ -30,32 +30,31 @@ export const ProductColumns = (props: Props) => {
         {
             width: 150,
             fixed: 'left' as 'left',
-            dataIndex: 'name',
-            title: 'Tên sản phẩm',
-            key: 'name',
+            dataIndex: 'fullName',
+            title: 'Họ và tên',
+            key: 'fullName',
         },
         {
             width: 250,
             fixed: 'left' as 'left',
-            dataIndex: 'price',
-            title: 'Giá sản phẩm',
-            key: 'price',
+            dataIndex: 'email',
+            title: 'Email',
+            key: 'email',
         },
         {
             width: 150,
-            dataIndex: 'category_id',
-            title: 'Danh mục',
-            key: 'category_id',
+            dataIndex: 'phoneNumber',
+            title: 'Số điện thoại',
+            key: 'phoneNumber',
             align: 'center' as 'center',
         },
         {
             width: 150,
-            dataIndex: 'description',
-            title: 'Thông tin',
-            key: 'description',
+            dataIndex: 'address',
+            title: 'Địa chỉ',
+            key: 'address',
             align: 'center' as 'center',
         },
-
         {
             width: 80,
             dataIndex: 'action',
@@ -66,11 +65,11 @@ export const ProductColumns = (props: Props) => {
                 return (
                     <PopoverAction
                         listAction={[
-                            {
-                                icon: <img src={DetailIcon} alt="view-detail-icon" />,
-                                text: ACTION_TYPE.XEM,
-                                action: () => actionXem(record),
-                            },
+                            // {
+                            //     icon: <img src={DetailIcon} alt="view-detail-icon" />,
+                            //     text: ACTION_TYPE.XEM,
+                            //     action: () => actionXem(record),
+                            // },
                             {
                                 icon: <EditOutlined className="text-xl text-gray-400" />,
                                 text: ACTION_TYPE.CAP_NHAT,

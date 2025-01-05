@@ -94,13 +94,7 @@ export const ACTION_TYPE = {
   XEM: 'Xem',
   CAP_NHAT: 'Sửa',
   XOA: 'Xóa',
-  GUI_DUYET: 'Gửi duyệt',
-  PHE_DUYET: 'Phê duyệt',
-  GUI_TSC: 'Gửi TSC',
-  TU_CHOI: 'Từ chối',
-  YC_MO_KHOA: 'Yêu cầu mở khóa',
-  MO_KHOA: 'Mở khóa',
-  XUAT_BAO_CAO: 'Xuất báo cáo',
+  PAYMENT: 'Thanh toán'
 }
 
 // export const stylesTextColumn: { [key: number]: string } = {
@@ -113,10 +107,24 @@ export const ACTION_TYPE = {
 
 
 export const messageType = {
-  ADD_NEW: "Add new",
-  UPDATE: "Update",
-  EXIT: "Exit",
+  ADD_NEW: "Thêm mới",
+  UPDATE: "Cập nhật",
+  EXIT: "Quay lại",
   ADD_SUCCESS: "Add new success",
   UPDATE_SUCCESS: "Update success",
   CHECK_INTERNET: "Kiểm tra kết nối"
 }
+
+export const ROLE = [
+  '',
+  'ADMIN',
+  'Quản lý',
+  'Kỹ thuật',
+  'Kế toán'
+]
+
+export const STATUS = [
+  'Chờ thanh toán',
+  'Đã thanh toán',
+  'Hủy'
+]

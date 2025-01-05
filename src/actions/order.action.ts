@@ -9,8 +9,7 @@ function useOrderActions() {
         addOrder,
         updateOrder,
         detailOrder,
-        deleteOrder,
-        addProductImage
+        deleteOrder
     }
 
     function getOrders(param: any) {
@@ -32,11 +31,6 @@ function useOrderActions() {
     function deleteOrder(id: number) {
         return _DELETE(`Order/${id}`,)
     }
-
-    function addProductImage(id: number, formData: FormData) {
-        return _UPLOAD(`products/uploads/${id}`, formData)
-    }
-    
 }
 
 export { useOrderActions };

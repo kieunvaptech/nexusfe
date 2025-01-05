@@ -8,15 +8,15 @@ interface FormProps extends ModalProps {
   onSearch: () => void
   onReset: () => void
   onInfo: () => void
-  categorysOption: DefaultOptionType[]
+  suppliersOption: DefaultOptionType[]
 }
 
-const SupplierSearchForm: React.FC<FormProps> = ({
+const DeviceSearchForm: React.FC<FormProps> = ({
   form,
   onSearch,
   onReset,
   onInfo,
-  categorysOption
+  suppliersOption
 }) => {
 
   return (
@@ -25,28 +25,28 @@ const SupplierSearchForm: React.FC<FormProps> = ({
         <Row gutter={48} wrap={true}>
           <Col xs={22} xl={12}>
             <Form.Item
-              label="Tên sản phẩm"
-              name="keyword"
+              label="Tên thiết bị"
+              name="DeviceName"
               wrapperCol={{
                 xl: { offset: 2 },
               }}
               labelCol={{ span: 6 }}
               labelAlign="left"
             >
-              <Input placeholder='Nhập tên sản phẩm' />
+              <Input placeholder='Nhập tên thiết bị' />
             </Form.Item>
           </Col>
           <Col xs={22} xl={12}>
             <Form.Item
-              label="Danh mục"
-              name="category_id"
+              label="Nhà cung cấp"
+              name="SupplierId"
               wrapperCol={{
                 xl: { offset: 2 },
               }}
               labelCol={{ span: 6 }}
               labelAlign="left"
             >
-              <Select options={categorysOption} placeholder="Chọn danh mục" />
+              <Select options={suppliersOption} placeholder="Chọn nhà cung cấp" />
             </Form.Item>
           </Col>
         </Row>
@@ -56,12 +56,12 @@ const SupplierSearchForm: React.FC<FormProps> = ({
           <Col span={10}>
             <div className="flex space-x-4">
               <Button onClick={onSearch}>Tìm kiếm</Button>
-              <Button onClick={onReset}>Xóa</Button>
+              <Button onClick={onReset}>Xoá</Button>
 
             </div></Col>
           <Col span={6}>
 
-            <Button type="primary" onClick={onInfo}>Thêm mới nhà cung cấp</Button></Col>
+            <Button type="primary" onClick={onInfo}>Thêm mới thiết bị</Button></Col>
 
 
 
@@ -74,4 +74,4 @@ const SupplierSearchForm: React.FC<FormProps> = ({
   )
 }
 
-export default memo(SupplierSearchForm)
+export default memo(DeviceSearchForm)

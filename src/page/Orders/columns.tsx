@@ -2,7 +2,8 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import DetailIcon from 'assets/icons/detail-icon.svg'
 import MoreIcon from 'components/atoms/icons/MoreIcon'
 import PopoverAction from 'components/atoms/PopoverAction'
-import { ACTION_TYPE } from 'utils/Constants'
+import { Order } from 'models/Order.model'
+import { ACTION_TYPE, STATUS } from 'utils/Constants'
 
 interface Props {
     actionXem: (record: any) => void
@@ -23,6 +24,7 @@ export const OrderColumns = (props: Props) => {
             fixed: 'left' as 'left',
             align: 'center' as 'center',
             title: 'STT',
+            key: 'stt',
             render: (value: any, row: any, index: number) => {
                 return index + 1
             },
@@ -30,43 +32,55 @@ export const OrderColumns = (props: Props) => {
         {
             width: 150,
             fixed: 'left' as 'left',
-            dataIndex: 'fullname',
             title: 'Họ tên',
-            key: 'fullname',
-        },
-        {
-            width: 250,
-            fixed: 'left' as 'left',
-            dataIndex: 'email',
-            title: 'Email',
-            key: 'email',
-        },
-        {
-            width: 250,
-            fixed: 'left' as 'left',
-            dataIndex: 'phone_number',
-            title: 'Số điện thoại',
-            key: 'phone_number',
+            key: 'customer_fullName',
+            render: (value: any, row: Order, index: number) => {
+                return row?.customer?.fullName
+            },
         },
         {
             width: 150,
+            fixed: 'left' as 'left',
+            title: 'Email',
+            key: 'email',
+            render: (value: any, row: Order, index: number) => {
+                return row?.customer?.email
+            },
+        },
+        {
+            width: 150,
+            fixed: 'left' as 'left',
+            title: 'Số điện thoại',
+            key: 'phone_number',
+            render: (value: any, row: Order, index: number) => {
+                return row?.customer?.phoneNumber
+            },
+        },
+        {
+            width: 300,
             dataIndex: 'address',
             title: 'Địa chỉ',
             key: 'address',
             align: 'center' as 'center',
+            render: (value: any, row: Order, index: number) => {
+                return row?.customer?.address
+            },
         },
         {
             width: 150,
-            dataIndex: 'note',
-            title: 'Ghi chú',
-            key: 'note',
+            dataIndex: 'employee_fullName',
+            title: 'Nhân viên',
+            key: 'employee_fullName',
             align: 'center' as 'center',
+            render: (value: any, row: Order, index: number) => {
+                return row?.employee?.fullName
+            },
         },
         {
-            width: 150,
-            dataIndex: 'total_money',
+            width: 100,
+            dataIndex: 'totalPrice',
             title: 'Tổng tiền',
-            key: 'total_money',
+            key: 'totalPrice',
             align: 'center' as 'center',
         },
         {
@@ -75,6 +89,9 @@ export const OrderColumns = (props: Props) => {
             title: 'Trạng thái',
             key: 'status',
             align: 'center' as 'center',
+            render: (status: number, row: any, index: number) => {
+                return STATUS[status]
+            },
         },
         {
             width: 80,
@@ -91,17 +108,21 @@ export const OrderColumns = (props: Props) => {
                                 text: ACTION_TYPE.XEM,
                                 action: () => actionXem(record),
                             },
-                            // {
-                            //     icon: <EditOutlined className="text-xl text-gray-400" />,
-                            //     text: ACTION_TYPE.CAP_NHAT,
-                            //     action: () => actionCapNhat(record),
-                            // },
+                            {
+                                icon: <EditOutlined className="text-xl text-gray-400" />,
+                                text: ACTION_TYPE.CAP_NHAT,
+                                action: () => actionCapNhat(record),
+                            },
                             {
                                 icon: <DeleteOutlined className="text-xl text-gray-400" />,
                                 text: ACTION_TYPE.XOA,
                                 action: () => actionXoa(record),
-                            }
-                            
+                            },
+                            {
+                                icon: <img src={DetailIcon} alt="view-detail-icon" />,
+                                text: ACTION_TYPE.PAYMENT,
+                                action: () => actionXem(record),
+                            },
                         ]}
                         placement="topRight"
                     >

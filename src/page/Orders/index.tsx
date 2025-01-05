@@ -3,13 +3,14 @@ import Content from 'layout/Content'
 import { Pagination } from 'components/organisms/Pagination';
 import { memo, useEffect, useState } from 'react'
 import { OrderColumns } from "./columns";
-import ProductSearchForm from './component/OrderSearchForm';
+import OrderSearchForm from './component/OrderSearchForm';
 import { DefaultOptionType } from 'antd/lib/select';
 import { FORM_MODE } from 'utils/Constants';
-import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc';
+import { messageErrorDefault, messageSuccessDefault, showConfirm } from 'utils/CommonFc';
 import OrderInfoForm from './component/OrderInfoForm';
 import { cloneDeep } from 'lodash-es';
 import { useOrderActions } from 'actions/order.action';
+import { Order } from 'models/Order.model';
 
 const OrderPage = () => {
   const [form] = Form.useForm()
@@ -20,35 +21,37 @@ const OrderPage = () => {
   const [total, setTotal] = useState(0)
   const [openInfo, setOpenInfo] = useState<boolean>(false)
   const [categorysOption, setcategorysOption] = useState<DefaultOptionType[]>([])
-  const [selected, setSelected] = useState<number | null>(null)
+  const [selected, setSelected] = useState<number | undefined>(undefined)
   const [mode, setMode] = useState<number>(1)
   const [dataSearch, setDataSearch] = useState({})
+  const [loading,setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     init()
   }, [])
 
-  const init = () => {
-    getOrders(1)
+  const init = async () => {
+    await getOrders(1);
+    setLoading(false);
   }
 
   const getOrders = async (pageIndex: number, search?: any) => {
-    try{
+    try {
       if (!search) {
         search = cloneDeep(dataSearch)
       }
       setPageIndex(pageIndex)
       const param = {
         page: pageIndex,
-        limit: pageSize,
-        ...search
+        size: pageSize,
+        query: JSON.stringify(search)
       }
       const ordersResponse: any = await orderActions.getOrders(param);
       if (ordersResponse) {
         setDataSourceOrder(ordersResponse.orders);
         setTotal(ordersResponse.totalPages * pageSize)
       }
-    }catch(error){
+    } catch (error) {
 
     }
 
@@ -56,12 +59,9 @@ const OrderPage = () => {
 
   const deleteOrder = async (id: number) => {
     try {
-      const response = await orderActions.deleteOrder(id);
-      if (response) {
-        getOrders(1)
-        messageSuccessDefault({ message: "Xoá đơn hàng thành công" })
-      }
-
+      await orderActions.deleteOrder(id);
+      getOrders(1);
+      messageSuccessDefault({ message: "Xoá đơn hàng thành công" });
     } catch (error) {
       console.log("error", error)
       messageErrorDefault({ message: "Kiểm tra lại kết nối." })
@@ -94,7 +94,7 @@ const OrderPage = () => {
     try {
       form.resetFields()
       setDataSearch({})
-      getOrders(1,{})
+      getOrders(1, {})
 
     } catch (error) {
       messageErrorDefault({ message: "Kiểm tra lại kết nối." })
@@ -105,39 +105,42 @@ const OrderPage = () => {
 
 
   return (
-    <Content loading={false}>
+    <Content loading={loading}>
       <>
-      <br />
+        <br />
         <div className="mx-1.5">
-          <Typography.Title level={4} >Orders Management</Typography.Title>
+          <Typography.Title level={4} >Quản lý đơn hàng</Typography.Title>
         </div>
 
-        <ProductSearchForm
+        <OrderSearchForm
           form={form}
-          categorysOption={categorysOption}
+          // categorysOption={categorysOption}
           onSearch={onSearch}
-          onReset={resetSearch} />
-        {/* <OrderInfoForm
+          onReset={resetSearch}
+          onInfo={() => add()} />
+        <OrderInfoForm
           mode={mode}
           open={openInfo}
-          data={selected}
+          id={selected}
           reload={reloadData}
           handleCancel={() => setOpenInfo(false)}
-        /> */}
+        />
         <Table
           columns={OrderColumns({
-            actionXem: (record: any) => {
+            actionXem: (record: Order) => {
               setMode(FORM_MODE.VIEW)
               setOpenInfo(true)
-              setSelected(record)
+              setSelected(record?.orderId)
             },
-            actionCapNhat: (record: any) => {
+            actionCapNhat: (record: Order) => {
               setMode(FORM_MODE.UPDATE)
               setOpenInfo(true)
-              setSelected(record)
+              setSelected(record?.orderId)
             },
-            actionXoa: (record: any) => {
-              deleteOrder(record.id)
+            actionXoa: (record: Order) => {
+              showConfirm(() => {
+                deleteOrder(record.orderId || 0)
+              });
             },
           })}
           dataSource={dataSourceOrder}
