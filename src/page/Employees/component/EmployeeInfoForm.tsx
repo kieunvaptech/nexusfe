@@ -1,27 +1,21 @@
 
+import { useEmployeeActions } from 'actions/employee.action'
 import {
   Button,
   Col,
   Form,
   Input,
-  InputNumber,
   Modal,
   ModalProps,
   Row,
-  Select,
-  Upload
+  Select
 } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import { DefaultOptionType } from 'antd/lib/select'
-import React, { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Employee } from 'models/Employee.model'
+import React, { useEffect } from 'react'
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc'
 import { FORM_MODE, messageType } from 'utils/Constants'
-import { UploadOutlined } from '@ant-design/icons'
-import { BASE_IMAGE } from 'connection'
-import { Employee } from 'models/Employee.model'
-import { useEmployeeActions } from 'actions/employee.action'
-import CryptoJS from 'crypto-js';
 
 interface ProductInfoFormProps extends ModalProps {
   handleCancel: () => void

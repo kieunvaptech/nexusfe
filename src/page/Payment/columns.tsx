@@ -39,7 +39,7 @@ export const ProductColumns = (props: Props) => {
             },
         },
         {
-            width: 250,
+            width: 150,
             fixed: 'left' as 'left',
             dataIndex: 'email',
             title: 'Email',
@@ -65,5 +65,36 @@ export const ProductColumns = (props: Props) => {
             key: 'amount',
             align: 'center' as 'center'
         },
+        {
+            width:250,
+            dataIndex: 'description',
+            title: 'Ghi chú',
+            key: 'description',
+            align: 'center' as 'center',
+        },
+        {
+            width: 80,
+            dataIndex: 'action',
+            title: 'Chức năng',
+            key: 'action',
+            fixed: 'right' as 'right',
+            render: (text: any, record: any) => {
+                return (
+                    <PopoverAction
+                        listAction={[
+                            {
+                                icon: <DeleteOutlined className="text-xl text-gray-400" />,
+                                text: ACTION_TYPE.XOA,
+                                action: () => actionXoa(record),
+                            },
+                        ]}
+                        placement="topRight"
+                    >
+                        <MoreIcon />
+                    </PopoverAction>
+                )
+            },
+        },
+        
     ]
 }

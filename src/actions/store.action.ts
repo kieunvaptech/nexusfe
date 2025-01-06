@@ -1,5 +1,5 @@
 import { Store } from "models/Store.model";
-import { _DELETE, _GET, _POST, _PUT } from "../connection";
+import { _DELETE, _GET, _POST, _PUT } from "../network";
 
 function useStoreActions() {
 

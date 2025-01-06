@@ -1,4 +1,4 @@
-import { Form, Table, Typography } from 'antd'
+import { Col, Form, Row, Table, Typography } from 'antd'
 import Content from 'layout/Content'
 import { Pagination } from 'components/organisms/Pagination';
 import { memo, useEffect, useState } from 'react'
@@ -8,11 +8,11 @@ import { DefaultOptionType } from 'antd/lib/select';
 import { FORM_MODE } from 'utils/Constants';
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc';
 import { cloneDeep } from 'lodash-es'
+import { useConnectionActions } from 'actions/connection.action';
 
 const ConnectionPage = () => {
   const [form] = Form.useForm()
-//   const productActions = useProductActions();
-//   const categoryActions = useCategoryActions();
+  const connectionActions = useConnectionActions();
   const [dataSourceProduct, setDataSourceProduct] = useState();
   const [pageIndex, setPageIndex] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
@@ -21,26 +21,15 @@ const ConnectionPage = () => {
   const [categorysOption, setcategorysOption] = useState<DefaultOptionType[]>([])
   const [idSelected, setIdSelected] = useState<number | null>(null)
   const [mode, setMode] = useState<number>(1)
-  const [dataSearch, setDataSearch] = useState({})
+  const [dataSearch, setDataSearch] = useState<any>()
 
-  useEffect(() => {
-    init()
-  }, [])
 
-  const init = () => {
-    getCategorys()
-    getProducts(1)
-  }
-
-  const getCategorys = async () => {
+  const getConnectionName = async (param: any) => {
     try {
-      const categorysResponse = await categoryActions.getCategories();
-      if (categorysResponse) {
-        const options: DefaultOptionType[] = categorysResponse.map((category: Category) => ({
-          label: category.name,
-          value: category.id
-        }))
-        setcategorysOption(options)
+      const response = await connectionActions.getConnectionName(param);
+      if (response) {
+        setDataSearch(response)
+        console.log("connectionActions", connectionActions)
       }
 
     } catch (error) {
@@ -50,38 +39,13 @@ const ConnectionPage = () => {
   }
 
 
-
-  const getProducts = async (pageIndex: number, search?: any) => {
-    try {
-      if (!search) {
-        search = cloneDeep(dataSearch)
-      }
-      setPageIndex(pageIndex)
-      const param = {
-        page: pageIndex,
-        limit: pageSize,
-        ...search
-      }
-      const productsResponse = await productActions.getAllProduct(param);
-      if (productsResponse) {
-        setDataSourceProduct(productsResponse.products);
-        setTotal(productsResponse.totalPages * pageSize)
-      }
-
-    } catch (error) {
-      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
-
-    }
-
-
-
-  }
 
   const searchProducts = async () => {
     try {
       const values = form.getFieldsValue()
-      setDataSearch(values)
-      getProducts(1, values)
+      setDataSearch(values);
+      getConnectionName(values);
+      console.log("values", values)
 
     } catch (error) {
       messageErrorDefault({ message: "Kiểm tra lại kết nối." })
@@ -89,68 +53,88 @@ const ConnectionPage = () => {
     }
   }
 
-  const resetSearch = async () => {
-    try {
-      form.resetFields()
-      setDataSearch({})
-      getProducts(1,{})
 
-    } catch (error) {
-      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
-
-    }
-  }
-
-  const deleteProduct = async (id: number) => {
-    try {
-      const response = await productActions.deleteProduct(id);
-      if (response) {
-        getProducts(1)
-        messageSuccessDefault({ message: "Xoá sản phẩm thành công" })
-      }
-
-    } catch (error) {
-      console.log("error", error)
-      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
-
-    }
-
-  }
-
-  const add = () => {
-    setIdSelected(null)
-    setMode(FORM_MODE.NEW)
-    setOpenInfo(true)
-  }
-
-  const reloadData = () => {
-    getProducts(1)
-    setOpenInfo(false)
-  }
 
   return (
-    <Content>
+    <Content loading={false}>
       <>
         <br />
-        <div className="mx-1.5">
-          <Typography.Title level={4} >Equipments Management</Typography.Title>
-        </div>
-
-        {/* <ProductSearchForm
+        <ProductSearchForm
           form={form}
-          categorysOption={categorysOption}
-          onSearch={searchProducts}
-          onReset={resetSearch}
-          onInfo={() => add()} />
-        <ProductInfoForm
+          onSearch={searchProducts} />
+
+        {
+          dataSearch &&
+          <Col>
+            <Row className="justify-between">
+              <Col span={6}>
+                <span></span>
+              </Col>
+              <Col span={6}>
+                <span>Họ và tên</span>
+              </Col>
+              <Col span={6}>
+                <span>{dataSearch?.payment?.order?.customer?.fullName}</span>
+              </Col>
+              <Col span={6}>
+                <span></span>
+              </Col>
+            </Row>
+            <Row className="justify-between">
+              <Col span={6}>
+                <span></span>
+              </Col>
+              <Col span={6}>
+                <span>email</span>
+              </Col>
+              <Col span={6}>
+                <span>{dataSearch?.payment?.order?.customer?.email}</span>
+              </Col>
+              <Col span={6}>
+                <span></span>
+              </Col>
+            </Row>
+            <Row className="justify-between">
+              <Col span={6}>
+                <span></span>
+              </Col>
+              <Col span={6}>
+                <span>Số điện thoại</span>
+              </Col>
+              <Col span={6}>
+                <span>{dataSearch?.payment?.order?.customer?.phoneNumber}</span>
+              </Col>
+              <Col span={6}>
+                <span></span>
+              </Col>
+            </Row>
+            <Row className="justify-between">
+              <Col span={6}>
+                <span></span>
+              </Col>
+              <Col span={6}>
+                <span>Thanh toán</span>
+              </Col>
+              <Col span={6}>
+                <span>{dataSearch?.payment?.order?.totalPrice}</span>
+              </Col>
+              <Col span={6}>
+                <span></span>
+              </Col>
+            </Row>
+          </Col>
+        }
+
+
+        {/* <ProductInfoForm
           id={idSelected}
           mode={mode}
           categorysOption={categorysOption}
           open={openInfo}
           reload={reloadData}
           handleCancel={() => setOpenInfo(false)}
-        />
-        <Table
+        /> */}
+        {/* <Table
           columns={ProductColumns({
             actionXem: (record: any) => {
               setMode(FORM_MODE.VIEW)

@@ -1,25 +1,19 @@
+import { useCustomerActions } from 'actions/customer.action'
 import {
   Button,
   Col,
   Form,
   Input,
-  InputNumber,
   Modal,
   ModalProps,
-  Row,
-  Select,
-  Upload
+  Row
 } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import { DefaultOptionType } from 'antd/lib/select'
-import React, { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Customer } from 'models/Customer.model'
+import React, { useEffect } from 'react'
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc'
 import { FORM_MODE } from 'utils/Constants'
-import { UploadOutlined } from '@ant-design/icons'
-import { BASE_IMAGE } from 'connection'
-import { Customer } from 'models/Customer.model'
-import { useCustomerActions } from 'actions/customer.action'
 
 interface FormProps extends ModalProps {
   handleCancel: () => void

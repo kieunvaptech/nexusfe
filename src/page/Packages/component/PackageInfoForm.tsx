@@ -1,3 +1,4 @@
+import { usePackageActions } from 'actions/package.action'
 import {
   Button,
   Col,
@@ -6,20 +7,14 @@ import {
   InputNumber,
   Modal,
   ModalProps,
-  Row,
-  Select,
-  Upload
+  Row
 } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import { DefaultOptionType } from 'antd/lib/select'
-import React, { memo, useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Package } from 'models/Package.model'
+import React, { memo, useEffect } from 'react'
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc'
 import { FORM_MODE } from 'utils/Constants'
-import { UploadOutlined } from '@ant-design/icons'
-import { BASE_IMAGE } from 'connection'
-import { usePackageActions } from 'actions/package.action'
-import { Package } from 'models/Package.model'
 
 interface FormProps extends ModalProps {
   handleCancel: () => void;

@@ -4,7 +4,6 @@ import { store } from 'store'
 
 export const TIMEOUT_SECOND = 180000
 export const BASE_URL = "https://localhost:7222/api/"
-export const BASE_IMAGE = BASE_URL+'products/images/'
 
 const instance = axios.create({
     timeout: TIMEOUT_SECOND,
@@ -15,11 +14,10 @@ const instance = axios.create({
 });
 
 const handleCatch = (error: any) => {
-    // console.log("error?.response?.status", error?.response?.status)
-    // if(error?.response?.status == 401){
-    //     localStorage.removeItem('token')
-    //     store.dispatch(setUserInfo(null))
-    // }
+    if(error?.response?.status == 401){
+        localStorage.removeItem('token')
+        store.dispatch(setUserInfo(null))
+    }
 }
 
 export async function _GET(url: string,params?: any) {
@@ -55,17 +53,6 @@ export async function _DELETE(url: string) {
     return instance.delete(url, {
         headers: token ? {
             'Authorization': `Bearer ${token}`
-        } : {}
-    }).then(response => response.data);
-}
-
-
-export async function _UPLOAD(url: string, formData: FormData) {
-    const token = localStorage.getItem('token')
-    return instance.post(url, formData, {
-        headers: token ? {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
         } : {}
     }).then(response => response.data);
 }

@@ -23,6 +23,9 @@ import { RootState } from 'store'
 import { messageErrorDefault, messageSuccessDefault, messageWarningDefault } from 'utils/CommonFc'
 import { FORM_MODE, STATUS } from 'utils/Constants'
 import OrderDetailForm from './OrderDetailForm'
+import { usePaymentActions } from 'actions/payment.action'
+import { useConnectionActions } from 'actions/connection.action'
+const { confirm } = Modal;
 
 interface OrderInfoFormProps extends ModalProps {
   handleCancel: () => void
@@ -44,6 +47,8 @@ const OrderInfoForm: React.FC<OrderInfoFormProps> = ({
 
   const orderActions = useOrderActions();
   const customerActions = useCustomerActions();
+  const paymentActions = usePaymentActions();
+  const connectionActions = useConnectionActions();
   const [customerData, setCustomerData] = useState<Customer>()
 
   const [openOrderDetail, setOpenOrderDetail] = useState<boolean>(false)
@@ -165,6 +170,64 @@ const OrderInfoForm: React.FC<OrderInfoFormProps> = ({
       messageErrorDefault({ message: "Kiểm tra lại kết nối." })
     }
   }
+
+  const handlePayment = async () => {
+    try {
+      confirm({
+        title: 'Xác nhận',
+        content: 'Bạn chắc chắn muốn thanh toán?',
+        okText: 'Thanh toán',
+        cancelText: 'Quay lại',
+        onOk(){
+          addPayment()
+        },
+      });
+    } catch (errInfo) {
+
+    }
+  }
+
+  const addPayment = async () => {
+    try {
+      const values = await form.validateFields();
+      
+      const body = {
+        orderId: orderData?.orderId,
+        amount: orderData?.totalPrice,
+        description: values?.description
+      };
+      const response: any = await paymentActions.addPayment(body);
+      if (response) {
+        
+        await Promise.all(
+          orderData?.orderDetails.map((item: any)=>(
+            addConnection({
+              paymentId : response?.paymentId,
+              connectionName: item?.packageName + Date.now()
+            })
+          ))
+        )
+        messageSuccessDefault({ message: "Thanh toán thành công" })
+        if (reload) reload()
+      }
+
+    } catch (error) {
+      console.log("error", error)
+      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
+    }
+
+  }
+
+  const addConnection = async (body: any) => {
+    try {
+      await connectionActions.addConnection(body);
+    } catch (error) {
+      console.log("error", error)
+      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
+    }
+
+  }
+
 
   const regex = /^(0)([0-9]{9})$/
   const onChangePhone = (e: any) => {
@@ -324,7 +387,7 @@ const OrderInfoForm: React.FC<OrderInfoFormProps> = ({
           {
             mode === FORM_MODE.VIEW && <Button
               onClick={() => {
-                handleSubmit()
+                handlePayment()
               }}
               className="w-[144px] min-h-[40px]"
             >

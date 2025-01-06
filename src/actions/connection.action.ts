@@ -1,35 +1,41 @@
-import { Supplier } from "models/Supplier.model";
-import { _DELETE, _GET,_POST, _PUT, _UPLOAD } from "../connection";
 
-function useSupplierActions() {
+import { Connection } from "models/Connection.model";
+import { _DELETE, _GET,_POST, _PUT } from "../network";
+
+function useConnectionActions() {
 
     return {
-        getSuppliers,
-        addSupplier,
-        updateSupplier,
-        detailSupplier,
-        deleteSupplier
+        getConnections,
+        getConnectionName,
+        addConnection,
+        updateConnection,
+        detailConnection,
+        deleteConnection
     }
 
-    function getSuppliers(param: any) {
-        return _GET("Supplier", param)
+    function getConnections(param: any) {
+        return _GET("Connection", param)
     }
 
-    function addSupplier(body: Supplier) {
-        return _POST("Supplier", body)
+    function getConnectionName(param: any) {
+        return _GET("Connection/ConnectionName", param)
     }
 
-    function updateSupplier(body: Supplier) {
-        return _PUT(`Supplier/${body.supplierId}`, body)
+    function addConnection(body: Connection) {
+        return _POST("Connection", body)
     }
 
-    function detailSupplier(id: number) {
-        return _GET(`Supplier/${id}`)
+    function updateConnection(body: Connection) {
+        return _PUT(`Connection/${body.connectionId}`, body)
     }
 
-    function deleteSupplier(id: number) {
-        return _DELETE(`Supplier/${id}`,)
+    function detailConnection(id: number) {
+        return _GET(`Connection/${id}`)
+    }
+
+    function deleteConnection(id: number) {
+        return _DELETE(`Connection/${id}`,)
     }
 }
 
-export { useSupplierActions };
+export { useConnectionActions };

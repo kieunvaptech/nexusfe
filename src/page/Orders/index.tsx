@@ -5,7 +5,7 @@ import { memo, useEffect, useState } from 'react'
 import { OrderColumns } from "./columns";
 import OrderSearchForm from './component/OrderSearchForm';
 import { DefaultOptionType } from 'antd/lib/select';
-import { FORM_MODE } from 'utils/Constants';
+import { FORM_MODE, STATUS } from 'utils/Constants';
 import { messageErrorDefault, messageSuccessDefault, showConfirm } from 'utils/CommonFc';
 import OrderInfoForm from './component/OrderInfoForm';
 import { cloneDeep } from 'lodash-es';
@@ -20,13 +20,18 @@ const OrderPage = () => {
   const [pageSize, setPageSize] = useState<number>(10)
   const [total, setTotal] = useState(0)
   const [openInfo, setOpenInfo] = useState<boolean>(false)
-  const [categorysOption, setcategorysOption] = useState<DefaultOptionType[]>([])
+  const [statusOption, setStatusOption] = useState<DefaultOptionType[]>([])
   const [selected, setSelected] = useState<number | undefined>(undefined)
   const [mode, setMode] = useState<number>(1)
   const [dataSearch, setDataSearch] = useState({})
   const [loading,setLoading] = useState<boolean>(true)
 
   useEffect(() => {
+    const options: DefaultOptionType[] = STATUS.map((item: string, index: number) => ({
+      label: item,
+      value: index
+    }))
+    setStatusOption(options)
     init()
   }, [])
 
@@ -49,7 +54,7 @@ const OrderPage = () => {
       const ordersResponse: any = await orderActions.getOrders(param);
       if (ordersResponse) {
         setDataSourceOrder(ordersResponse.orders);
-        setTotal(ordersResponse.totalPages * pageSize)
+        setTotal(ordersResponse.count)
       }
     } catch (error) {
 
@@ -114,7 +119,7 @@ const OrderPage = () => {
 
         <OrderSearchForm
           form={form}
-          // categorysOption={categorysOption}
+          statusOption={statusOption}
           onSearch={onSearch}
           onReset={resetSearch}
           onInfo={() => add()} />

@@ -1,6 +1,6 @@
 
 import { Order } from "models/Order.model";
-import { _DELETE, _GET,_POST, _PUT, _UPLOAD } from "../connection";
+import { _DELETE, _GET,_POST, _PUT } from "../network";
 
 function useOrderActions() {
 

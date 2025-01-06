@@ -1,4 +1,4 @@
-import { _GET, _POST } from "../connection"
+import { _GET, _POST } from "../network"
 import { LoginRequest } from "./LoginRequest";
 
 function useUserActions() {

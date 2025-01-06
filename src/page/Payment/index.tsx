@@ -1,4 +1,4 @@
-import { Form, Table, Typography } from 'antd'
+import { Form, Table, Typography, Modal } from 'antd'
 import Content from 'layout/Content'
 import { Pagination } from 'components/organisms/Pagination';
 import { memo, useEffect, useState } from 'react'
@@ -10,6 +10,8 @@ import { FORM_MODE, messageType } from 'utils/Constants';
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc';
 import { cloneDeep } from 'lodash-es'
 import { usePaymentActions } from 'actions/payment.action';
+import { Payment } from 'models/Payment.model';
+const { confirm } = Modal;
 
 const PaymentPage = () => {
   const [form] = Form.useForm()
@@ -78,7 +80,7 @@ const PaymentPage = () => {
     }
   }
 
-  const deleteProduct = async (id: number) => {
+  const deletePayment = async (id: number) => {
     try {
       const response = await paymentActions.deletePayment(id);
       if (response) {
@@ -139,23 +141,32 @@ const PaymentPage = () => {
               setOpenInfo(true)
               setIdSelected(record.id)
             },
-            actionXoa: (record: any) => {
-              // deleteProduct(record.id)
+            actionXoa: (record: Payment) => {
+              confirm({
+                title: 'Xác nhận',
+                content: 'Bạn chắc chắn muốn hủy thanh toán?',
+                okText: 'Hủy thanh toán',
+                cancelText: 'Quay lại',
+                onOk(){
+                  deletePayment(record.paymentId || 0)
+                },
+              })
+              
             },
           })}
           dataSource={dataSource}
           pagination={false}
         />
         <div style={{ padding: 5 }}>
-          {/* {dataSourceProduct && (
+          {dataSource && (
             <Pagination
               totalItems={total}
               pageSize={pageSize}
               setPageSize={setPageSize}
               pageIndex={pageIndex}
-              setPageIndex={getProducts}
+              setPageIndex={getPayments}
             />
-          )} */}
+          )}
         </div>
       </>
     </Content>

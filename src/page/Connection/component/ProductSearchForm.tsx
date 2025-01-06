@@ -6,62 +6,40 @@ import React, { memo } from 'react'
 interface FormProps extends ModalProps {
   form: FormInstance<any>
   onSearch: () => void
-  onReset: () => void
-  onInfo: () => void
-  categorysOption: DefaultOptionType[]
 }
 
 const ProductSearchForm: React.FC<FormProps> = ({
   form,
-  onSearch,
-  onReset,
-  onInfo,
-  categorysOption
+  onSearch
 }) => {
 
   return (
     <Card >
       <Form form={form} className="mt-4">
         <Row gutter={48} wrap={true}>
-          <Col xs={22} xl={12}>
+          <Col xs={24} xl={12}>
             <Form.Item
-              label="Tên sản phẩm"
-              name="keyword"
+              label="Mã kết nối"
+              name="connectionName"
               wrapperCol={{
                 xl: { offset: 2 },
               }}
               labelCol={{ span: 6 }}
               labelAlign="left"
             >
-              <Input placeholder='Nhập tên sản phẩm' />
+              <Input placeholder='Nhập mã sản phẩm' />
             </Form.Item>
           </Col>
-          <Col xs={22} xl={12}>
-            <Form.Item
-              label="Danh mục"
-              name="category_id"
-              wrapperCol={{
-                xl: { offset: 2 },
-              }}
-              labelCol={{ span: 6 }}
-              labelAlign="left"
-            >
-              <Select options={categorysOption} placeholder="Chọn danh mục" />
-            </Form.Item>
-          </Col>
+          
         </Row>
 
         <Row gutter={48} wrap={true}>
-          <Col span={8}></Col>
-          <Col span={10}>
+          <Col span={6}></Col>
+          <Col span={18}>
             <div className="flex space-x-4">
-              <Button onClick={onSearch}>Tìm kiếm sản phẩm</Button>
-              <Button onClick={onReset}>Xoá tìm kiếm</Button>
+              <Button onClick={onSearch}>Tìm kiếm</Button>
 
             </div></Col>
-          <Col span={6}>
-
-            <Button type="primary" onClick={onInfo}>Thêm mới sản phẩm</Button></Col>
 
 
 

@@ -1,5 +1,5 @@
 import { Customer } from "models/Customer.model";
-import { _DELETE, _GET, _POST, _PUT } from "../connection";
+import { _DELETE, _GET, _POST, _PUT } from "../network";
 
 function useCustomerActions() {
 

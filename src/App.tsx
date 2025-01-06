@@ -15,6 +15,7 @@ import PackagePage from 'page/Packages/index'
 import EmployeePage from 'page/Employees/index'
 import SupplierPage from 'page/Suppliers/index'
 import DevicePage from 'page/Device'
+import ConnectionPage from 'page/Connection'
 
 interface PrivateRouteProps {
   children: ReactNode
@@ -57,6 +58,7 @@ function App() {
 
       </Route>
       <Route path="/login" element={<Login />} />
+      <Route path="/connection" element={<ConnectionPage />} />
 
       <Route path="*" element={<NotFound />} />
       <Route path="/403" element={<Forbidden />} />

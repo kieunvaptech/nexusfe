@@ -1,4 +1,4 @@
-import { _DELETE, _GET, _POST, _PUT } from "../connection";
+import { _DELETE, _GET, _POST, _PUT } from "../network";
 import { Employee } from "models/Employee.model";
 
 function useEmployeeActions() {
