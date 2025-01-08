@@ -187,7 +187,6 @@ const PackageInfoForm: React.FC<FormProps> = ({
             <Form.Item
               label="Mô tả"
               name="description"
-              labelAlign='left'
               rules={[{ required: true, message: 'Mô tả không được để trống' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}

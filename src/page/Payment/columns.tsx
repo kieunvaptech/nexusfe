@@ -84,7 +84,7 @@ export const ProductColumns = (props: Props) => {
                         listAction={[
                             {
                                 icon: <DeleteOutlined className="text-xl text-gray-400" />,
-                                text: ACTION_TYPE.XOA,
+                                text: 'Hủy',
                                 action: () => actionXoa(record),
                             },
                         ]}

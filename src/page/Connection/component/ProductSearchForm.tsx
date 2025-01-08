@@ -16,34 +16,40 @@ const ProductSearchForm: React.FC<FormProps> = ({
   return (
     <Card >
       <Form form={form} className="mt-4">
-        <Row gutter={48} wrap={true}>
-          <Col xs={24} xl={12}>
+        <Row className="justify-between">
+          <Col span={6}>
+            <span></span>
+          </Col>
+          <Col span={12}>
             <Form.Item
               label="Mã kết nối"
               name="connectionName"
               wrapperCol={{
                 xl: { offset: 2 },
               }}
-              labelCol={{ span: 6 }}
+              labelCol={{ span: 2 }}
               labelAlign="left"
             >
               <Input placeholder='Nhập mã sản phẩm' />
             </Form.Item>
           </Col>
-          
+          <Col span={6}>
+            <span></span>
+          </Col>
         </Row>
 
-        <Row gutter={48} wrap={true}>
-          <Col span={6}></Col>
-          <Col span={18}>
-            <div className="flex space-x-4">
-              <Button onClick={onSearch}>Tìm kiếm</Button>
-
-            </div></Col>
-
-
-
+        <Row className="justify-between">
+          <Col span={6}>
+            <span></span>
+          </Col>
+          <Col span={6}>
+            <Button onClick={onSearch}>Tìm kiếm</Button>
+          </Col>
+          <Col span={6}>
+            <span></span>
+          </Col>
         </Row>
+
 
       </Form>
 

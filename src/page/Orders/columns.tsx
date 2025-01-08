@@ -6,16 +6,20 @@ import { Order } from 'models/Order.model'
 import { ACTION_TYPE, STATUS } from 'utils/Constants'
 
 interface Props {
+    RoleId?: number
     actionXem: (record: any) => void
     actionCapNhat: (record: any) => void
     actionXoa: (record: any) => void
+    actionPay: (record: any) => void
 }
 
 export const OrderColumns = (props: Props) => {
     const {
+        RoleId,
         actionXem,
         actionCapNhat,
         actionXoa,
+        actionPay
     } = props
 
     return [
@@ -112,16 +116,19 @@ export const OrderColumns = (props: Props) => {
                                 icon: <EditOutlined className="text-xl text-gray-400" />,
                                 text: ACTION_TYPE.CAP_NHAT,
                                 action: () => actionCapNhat(record),
+                                hide: (record?.status == 1 || record?.status == 2)
                             },
                             {
                                 icon: <DeleteOutlined className="text-xl text-gray-400" />,
                                 text: ACTION_TYPE.XOA,
                                 action: () => actionXoa(record),
+                                hide: (record?.status == 1 || record?.status == 2)
                             },
                             {
                                 icon: <img src={DetailIcon} alt="view-detail-icon" />,
                                 text: ACTION_TYPE.PAYMENT,
-                                action: () => actionXem(record),
+                                action: () => actionPay(record),
+                                hide: (record?.status == 1 || record?.status == 2 || RoleId == 2 || RoleId == 3) 
                             },
                         ]}
                         placement="topRight"

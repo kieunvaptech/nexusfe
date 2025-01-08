@@ -67,6 +67,8 @@ const OrderInfoForm: React.FC<OrderInfoFormProps> = ({
           statusName: 'Tạo mới'
         })
       }
+    }else{
+      resetForm()
     }
 
     return () => {
@@ -178,7 +180,7 @@ const OrderInfoForm: React.FC<OrderInfoFormProps> = ({
         content: 'Bạn chắc chắn muốn thanh toán?',
         okText: 'Thanh toán',
         cancelText: 'Quay lại',
-        onOk(){
+        onOk() {
           addPayment()
         },
       });
@@ -190,7 +192,7 @@ const OrderInfoForm: React.FC<OrderInfoFormProps> = ({
   const addPayment = async () => {
     try {
       const values = await form.validateFields();
-      
+
       const body = {
         orderId: orderData?.orderId,
         amount: orderData?.totalPrice,
@@ -198,11 +200,11 @@ const OrderInfoForm: React.FC<OrderInfoFormProps> = ({
       };
       const response: any = await paymentActions.addPayment(body);
       if (response) {
-        
+
         await Promise.all(
-          orderData?.orderDetails.map((item: any)=>(
+          orderData?.orderDetails.map((item: any) => (
             addConnection({
-              paymentId : response?.paymentId,
+              paymentId: response?.paymentId,
               connectionName: item?.packageName + Date.now()
             })
           ))
@@ -349,7 +351,7 @@ const OrderInfoForm: React.FC<OrderInfoFormProps> = ({
         return (
           <>
             {
-              mode !== FORM_MODE.VIEW && <Row>
+              mode !== FORM_MODE.VIEW && mode !== FORM_MODE.PAY && <Row>
                 <div className="mr-5">
                   <EditOutlined className="text-xl text-gray-400" onClick={() => onEditOrderDetail(record)} />
                 </div>
@@ -375,7 +377,7 @@ const OrderInfoForm: React.FC<OrderInfoFormProps> = ({
       footer={[
         <div className="flex-center w-full gap-3">
           {
-            mode !== FORM_MODE.VIEW && <Button
+            mode !== FORM_MODE.VIEW && mode !== FORM_MODE.PAY && <Button
               onClick={() => {
                 handleSubmit()
               }}
@@ -385,7 +387,7 @@ const OrderInfoForm: React.FC<OrderInfoFormProps> = ({
             </Button>
           }
           {
-            mode === FORM_MODE.VIEW && <Button
+            mode === FORM_MODE.PAY && <Button
               onClick={() => {
                 handlePayment()
               }}
@@ -491,19 +493,21 @@ const OrderInfoForm: React.FC<OrderInfoFormProps> = ({
             </Form.Item>
           </Col>
         </Row>
-        <Row className="justify-between">
-        <Col span={11}>
-            <Form.Item
-              label="Ghi chú"
-              name="description"
-              // rules={[{ required: true, message: 'Không được để trống' }]}
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 16 }}
-            >
-              <TextArea  />
-            </Form.Item>
-          </Col>
-        </Row>
+        {
+          mode === FORM_MODE.PAY && <Row className="justify-between">
+            <Col span={11}>
+              <Form.Item
+                label="Ghi chú"
+                name="description"
+                // rules={[{ required: true, message: 'Không được để trống' }]}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 16 }}
+              >
+                <TextArea />
+              </Form.Item>
+            </Col>
+          </Row>
+        }
       </Form>
       <Row>
         <Col span={20}>
@@ -511,9 +515,10 @@ const OrderInfoForm: React.FC<OrderInfoFormProps> = ({
         </Col>
         <Col span={2}>
           {
-            mode !== FORM_MODE.VIEW &&
+            mode !== FORM_MODE.VIEW && mode !== FORM_MODE.PAY &&
             <Button
               onClick={() => {
+                setOrderDetailData(null);
                 setModeOrderDetail(FORM_MODE.NEW);
                 setOpenOrderDetail(true);
               }}

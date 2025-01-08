@@ -195,7 +195,6 @@ const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
             <Form.Item
               label="Địa chỉ"
               name="address"
-              labelAlign='left'
               rules={[{ required: true, message: 'Địa chỉ không được để trống' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
@@ -221,7 +220,6 @@ const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
             <Form.Item
               label="Mật khẩu"
               name="passwordHash"
-              labelAlign='left'
               // rules={[{ required: true }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
@@ -247,7 +245,6 @@ const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
             <Form.Item
               label="Cửa hàng"
               name="storeId"
-              labelAlign='left'
               rules={[{ required: true, message: 'Cửa hàng không được để trống' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}

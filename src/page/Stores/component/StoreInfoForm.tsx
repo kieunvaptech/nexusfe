@@ -94,7 +94,7 @@ const StoreInfoForm: React.FC<CategoryInfoFormProps> = ({
 
   return (
     <Modal
-      title={mode === FORM_MODE.NEW ? 'Add new Store' : 'Update Store'}
+      title={mode === FORM_MODE.NEW ? 'Thêm mới cửa hàng' : 'Cập nhật thông tin cửa hàng'}
       centered
       footer={[
         <div className="flex-center w-full gap-3">
@@ -105,7 +105,7 @@ const StoreInfoForm: React.FC<CategoryInfoFormProps> = ({
               }}
               className="w-[144px] min-h-[40px]"
             >
-              {mode === FORM_MODE.NEW ? 'Add new' : 'Update'}
+              {mode === FORM_MODE.NEW ? 'Thêm mới' : 'Cập nhật'}
             </Button>
           }
           <Button
@@ -114,7 +114,7 @@ const StoreInfoForm: React.FC<CategoryInfoFormProps> = ({
             }}
             className="w-[144px] min-h-[40px]"
           >
-            Exit
+            Thoát
           </Button>
         </div>,
       ]}

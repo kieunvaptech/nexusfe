@@ -11,11 +11,15 @@ import OrderInfoForm from './component/OrderInfoForm';
 import { cloneDeep } from 'lodash-es';
 import { useOrderActions } from 'actions/order.action';
 import { Order } from 'models/Order.model';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store';
 
 const OrderPage = () => {
   const [form] = Form.useForm()
   const orderActions = useOrderActions();
   const [dataSourceOrder, setDataSourceOrder] = useState();
+  const userInfo = useSelector((state: RootState) => state.userReducer.userInfo);
+  
   const [pageIndex, setPageIndex] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
   const [total, setTotal] = useState(0)
@@ -132,6 +136,7 @@ const OrderPage = () => {
         />
         <Table
           columns={OrderColumns({
+            RoleId: userInfo?.RoleId,
             actionXem: (record: Order) => {
               setMode(FORM_MODE.VIEW)
               setOpenInfo(true)
@@ -146,6 +151,11 @@ const OrderPage = () => {
               showConfirm(() => {
                 deleteOrder(record.orderId || 0)
               });
+            },
+            actionPay: (record: Order) => {
+              setMode(FORM_MODE.PAY)
+              setOpenInfo(true)
+              setSelected(record?.orderId)
             },
           })}
           dataSource={dataSourceOrder}

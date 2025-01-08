@@ -22,6 +22,7 @@ const ConnectionPage = () => {
   const [idSelected, setIdSelected] = useState<number | null>(null)
   const [mode, setMode] = useState<number>(1)
   const [dataSearch, setDataSearch] = useState<any>()
+  const [loading, setloading] = useState<boolean>(false)
 
 
   const getConnectionName = async (param: any) => {
@@ -31,7 +32,7 @@ const ConnectionPage = () => {
         setDataSearch(response)
         console.log("connectionActions", connectionActions)
       }
-
+      setloading(false)
     } catch (error) {
       messageErrorDefault({ message: "Kiểm tra lại kết nối." })
 
@@ -42,6 +43,7 @@ const ConnectionPage = () => {
 
   const searchProducts = async () => {
     try {
+      setloading(true)
       const values = form.getFieldsValue()
       setDataSearch(values);
       getConnectionName(values);
@@ -56,7 +58,7 @@ const ConnectionPage = () => {
 
 
   return (
-    <Content loading={false}>
+    <Content loading={loading}>
       <>
         <br />
         <ProductSearchForm
@@ -65,63 +67,184 @@ const ConnectionPage = () => {
 
         {
           dataSearch &&
-          <Col>
+          <Col className="mt-10">
+            <Row className="justify-between mt-2">
+                    <Col span={6}>
+                      <span></span>
+                    </Col>
+                    <Col span={2}>
+                      <span></span>
+                    </Col>
+                    <Col span={10}>
+                    <Typography.Title level={5} className="justify-between mt-2" >Khách hàng</Typography.Title>
+                    </Col>
+                    <Col span={6}>
+                      <span></span>
+                    </Col>
+                  </Row>
             <Row className="justify-between">
               <Col span={6}>
                 <span></span>
               </Col>
-              <Col span={6}>
-                <span>Họ và tên</span>
+              <Col span={2}>
+                <span></span>
               </Col>
-              <Col span={6}>
-                <span>{dataSearch?.payment?.order?.customer?.fullName}</span>
+              <Col span={10}>
+                <span>Họ và tên: {dataSearch?.payment?.order?.customer?.fullName}</span>
               </Col>
               <Col span={6}>
                 <span></span>
               </Col>
             </Row>
-            <Row className="justify-between">
+            <Row className="justify-between mt-2" >
               <Col span={6}>
                 <span></span>
               </Col>
-              <Col span={6}>
-                <span>email</span>
-              </Col>
-              <Col span={6}>
-                <span>{dataSearch?.payment?.order?.customer?.email}</span>
-              </Col>
-              <Col span={6}>
+              <Col span={2}>
                 <span></span>
               </Col>
-            </Row>
-            <Row className="justify-between">
-              <Col span={6}>
-                <span></span>
-              </Col>
-              <Col span={6}>
-                <span>Số điện thoại</span>
-              </Col>
-              <Col span={6}>
-                <span>{dataSearch?.payment?.order?.customer?.phoneNumber}</span>
+              <Col span={10}>
+                <span>Email: {dataSearch?.payment?.order?.customer?.email}</span>
               </Col>
               <Col span={6}>
                 <span></span>
               </Col>
             </Row>
-            <Row className="justify-between">
+            <Row className="justify-between mt-2">
               <Col span={6}>
                 <span></span>
               </Col>
-              <Col span={6}>
-                <span>Thanh toán</span>
+              <Col span={2}>
+                <span></span>
               </Col>
-              <Col span={6}>
-                <span>{dataSearch?.payment?.order?.totalPrice}</span>
+              <Col span={10}>
+                <span>Số điện thoại: {dataSearch?.payment?.order?.customer?.phoneNumber}</span>
               </Col>
               <Col span={6}>
                 <span></span>
               </Col>
             </Row>
+            <Row className="justify-between mt-2">
+              <Col span={6}>
+                <span></span>
+              </Col>
+              <Col span={2}>
+                <span></span>
+              </Col>
+              <Col span={10}>
+                <span>Địa chỉ: {dataSearch?.payment?.order?.customer?.address}</span>
+              </Col>
+              <Col span={6}>
+                <span></span>
+              </Col>
+            </Row>
+            <Row className="justify-between mt-2">
+              <Col span={6}>
+                <span></span>
+              </Col>
+              <Col span={2}>
+                <span></span>
+              </Col>
+              <Col span={10}>
+                <span>Thanh toán: {dataSearch?.payment?.order?.totalPrice} $</span>
+              </Col>
+              <Col span={6}>
+                <span></span>
+              </Col>
+            </Row>
+            {
+              dataSearch?.payment?.order.orderDetails.map((item: any) => (
+                <>
+                  
+                  <Row className="justify-between mt-2">
+                    <Col span={6}>
+                      <span></span>
+                    </Col>
+                    <Col span={2}>
+                      <span></span>
+                    </Col>
+                    <Col span={10}>
+                    <Typography.Title level={5} className="justify-between mt-2" >Gói cước</Typography.Title>
+                    </Col>
+                    <Col span={6}>
+                      <span></span>
+                    </Col>
+                  </Row>
+                  <Row className="justify-between mt-2">
+                    <Col span={6}>
+                      <span></span>
+                    </Col>
+                    <Col span={2}>
+                      <span></span>
+                    </Col>
+                    <Col span={10}>
+                      <span>- Tên gói cước: {item?.package?.packageName} - Số lượng: {item?.packageQuantity}</span>
+                    </Col>
+                    <Col span={6}>
+                      <span></span>
+                    </Col>
+                  </Row>
+                  <Row className="justify-between mt-2">
+                    <Col span={6}>
+                      <span></span>
+                    </Col>
+                    <Col span={2}>
+                      <span></span>
+                    </Col>
+                    <Col span={10}>
+                      <span>- Giá: {item?.package?.price} $</span>
+                    </Col>
+                    <Col span={6}>
+                      <span></span>
+                    </Col>
+                  </Row>
+                  <Row className="justify-between mt-2">
+                    <Col span={6}>
+                      <span></span>
+                    </Col>
+                    <Col span={2}>
+                      <span></span>
+                    </Col>
+                    <Col span={10}>
+                      <span>- Tiền cọc: {item?.package?.securityDeposit} $</span>
+                    </Col>
+                    <Col span={6}>
+                      <span></span>
+                    </Col>
+                  </Row>
+                  <Row className="justify-between mt-2">
+                    <Col span={6}>
+                      <span></span>
+                    </Col>
+                    <Col span={2}>
+                      <span></span>
+                    </Col>
+                    <Col span={10}>
+                      <span>- Chi tiết: {item?.package?.description}</span>
+                    </Col>
+                    <Col span={6}>
+                      <span></span>
+                    </Col>
+                  </Row>
+                  <Row className="justify-between mt-2">
+                    <Col span={6}>
+                      <span></span>
+                    </Col>
+                    <Col span={2}>
+                      <span></span>
+                    </Col>
+                    <Col span={10}>
+                      <span>- Tên thiết bị: {item?.device?.deviceName} - Số lượng: {item?.deviceQuantity}</span>
+                    </Col>
+                    <Col span={6}>
+                      <span></span>
+                    </Col>
+                  </Row>
+                  
+                </>
+
+              ))
+            }
           </Col>
         }
 

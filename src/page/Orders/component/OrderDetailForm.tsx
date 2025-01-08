@@ -116,7 +116,7 @@ const OrderDetailForm: React.FC<FormProps> = ({
   const getDevices = async () => {
     try {
       const search = {
-        StoreId: userInfo?.StoreId
+        StoreId: userInfo?.StoreId || 0
       }
       const param = {
         page: 0,
