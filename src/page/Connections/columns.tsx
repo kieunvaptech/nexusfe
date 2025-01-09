@@ -36,8 +36,8 @@ export const ProductColumns = (props: Props) => {
             dataIndex: 'fullName',
             title: 'Họ và tên',
             key: 'fullName',
-            render: (value: any, row: Payment, index: number)=> {
-                return row?.order?.customer?.fullName
+            render: (value: any, row: any, index: number)=> {
+                return row?.payment?.order?.customer?.fullName
             },
         },
         {
@@ -46,8 +46,8 @@ export const ProductColumns = (props: Props) => {
             dataIndex: 'email',
             title: 'Email',
             key: 'email',
-            render: (value: any, row: Payment, index: number)=> {
-                return row?.order?.customer?.email
+            render: (value: any, row: any, index: number)=> {
+                return row?.payment?.order?.customer?.email
             },
         },
         {
@@ -56,8 +56,8 @@ export const ProductColumns = (props: Props) => {
             title: 'Số điện thoại',
             key: 'phoneNumber',
             align: 'center' as 'center',
-            render: (value: any, row: Payment, index: number)=> {
-                return row?.order?.customer?.phoneNumber
+            render: (value: any, row: any, index: number)=> {
+                return row?.payment?.order?.customer?.phoneNumber
             },
         },
         {
@@ -65,39 +65,42 @@ export const ProductColumns = (props: Props) => {
             dataIndex: 'amount',
             title: 'Tổng tiền',
             key: 'amount',
-            align: 'center' as 'center'
+            align: 'center' as 'center',
+            render: (value: any, row: any, index: number)=> {
+                return row?.payment?.order?.totalPrice
+            },
         },
         {
             width:250,
-            dataIndex: 'description',
-            title: 'Ghi chú',
-            key: 'description',
+            dataIndex: 'connectionName',
+            title: 'Mã kết nối',
+            key: 'connectionName',
             align: 'center' as 'center',
         },
-        {
-            width: 80,
-            dataIndex: 'action',
-            title: 'Chức năng',
-            key: 'action',
-            fixed: 'right' as 'right',
-            render: (text: any, record: any) => {
-                return (
-                    <PopoverAction
-                        listAction={[
-                            {
-                                icon: <DeleteOutlined className="text-xl text-gray-400" />,
-                                text: 'Hủy',
-                                action: () => actionXoa(record),
-                                hide: RoleId !== 4
-                            },
-                        ]}
-                        placement="topRight"
-                    >
-                        {RoleId === 4 && <MoreIcon />}
-                    </PopoverAction>
-                )
-            },
-        },
+        // {
+        //     width: 80,
+        //     dataIndex: 'action',
+        //     title: 'Chức năng',
+        //     key: 'action',
+        //     fixed: 'right' as 'right',
+        //     render: (text: any, record: any) => {
+        //         return (
+        //             <PopoverAction
+        //                 listAction={[
+        //                     {
+        //                         icon: <DeleteOutlined className="text-xl text-gray-400" />,
+        //                         text: 'Hủy',
+        //                         action: () => actionXoa(record),
+        //                         hide: RoleId !== 4
+        //                     },
+        //                 ]}
+        //                 placement="topRight"
+        //             >
+        //                 {RoleId === 4 && <MoreIcon />}
+        //             </PopoverAction>
+        //         )
+        //     },
+        // },
         
     ]
 }

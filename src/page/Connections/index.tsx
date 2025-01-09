@@ -4,7 +4,7 @@ import { Pagination } from 'components/organisms/Pagination';
 import { memo, useEffect, useState } from 'react'
 import { useSupplierActions } from "../../actions/supplier.action";
 import { ProductColumns } from "./columns";
-import PaymentSearchForm from './component/PaymentSearchForm';
+import ConnectsSearchForm from './component/ConnectsSearchForm';
 import { DefaultOptionType } from 'antd/lib/select';
 import { FORM_MODE, messageType } from 'utils/Constants';
 import { messageErrorDefault, messageSuccessDefault } from 'utils/CommonFc';
@@ -13,31 +13,34 @@ import { usePaymentActions } from 'actions/payment.action';
 import { Payment } from 'models/Payment.model';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store';
+import { useConnectionActions } from 'actions/connection.action';
 const { confirm } = Modal;
 
-const PaymentPage = () => {
-  const [form] = Form.useForm()
-  const paymentActions = usePaymentActions();
+const ConnectionsPage = () => {
+  const [form] = Form.useForm();
+  const connectionActions = useConnectionActions();
   const userInfo = useSelector((state: RootState) => state.userReducer.userInfo);
   const [dataSource, setDataSource] = useState();
-  const [pageIndex, setPageIndex] = useState<number>(1)
-  const [pageSize, setPageSize] = useState<number>(10)
-  const [total, setTotal] = useState(0)
-  const [openInfo, setOpenInfo] = useState<boolean>(false)
-  const [categorysOption, setcategorysOption] = useState<DefaultOptionType[]>([])
-  const [idSelected, setIdSelected] = useState<number | null>(null)
-  const [mode, setMode] = useState<number>(1)
-  const [dataSearch, setDataSearch] = useState({})
+  const [pageIndex, setPageIndex] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [total, setTotal] = useState(0);
+  const [openInfo, setOpenInfo] = useState<boolean>(false);
+  const [categorysOption, setcategorysOption] = useState<DefaultOptionType[]>([]);
+  const [idSelected, setIdSelected] = useState<number | null>(null);
+  const [mode, setMode] = useState<number>(1);
+  const [dataSearch, setDataSearch] = useState({});
+  const [loading,setloading] = useState(true);
 
   useEffect(() => {
     init()
   }, [])
 
-  const init = () => {
-    getPayments(1)
+  const init = async () => {
+    await getConnections(1);
+    setloading(false);
   }
 
-  const getPayments = async (pageIndex: number, search?: any) => {
+  const getConnections = async (pageIndex: number, search?: any) => {
       try {
         if (!search) {
           search = cloneDeep(dataSearch)
@@ -48,9 +51,10 @@ const PaymentPage = () => {
           size: pageSize,
           query: JSON.stringify(search)
         }
-        const response = await paymentActions.getPayments(param);
+        const response = await connectionActions.getConnections(param);
         if (response) {
-          setDataSource(response?.payments);
+          setloading(false)
+          setDataSource(response?.connections);
           setTotal(response.count)
         }
   
@@ -61,9 +65,10 @@ const PaymentPage = () => {
 
   const searchProducts = async () => {
     try {
+      setloading(true)
       const values = form.getFieldsValue()
       setDataSearch(values)
-      getPayments(1, values)
+      getConnections(1, values)
 
     } catch (error) {
       messageErrorDefault({ message: "Kiểm tra lại kết nối." })
@@ -75,7 +80,7 @@ const PaymentPage = () => {
     try {
       form.resetFields()
       setDataSearch({})
-      getPayments(1,{})
+      getConnections(1,{})
 
     } catch (error) {
       messageErrorDefault({ message: "Kiểm tra lại kết nối." })
@@ -83,47 +88,25 @@ const PaymentPage = () => {
     }
   }
 
-  const deletePayment = async (id: number) => {
-    try {
-      const response = await paymentActions.deletePayment(id);
-      if (response) {
-        getPayments(1)
-        messageSuccessDefault({ message: "Xoá sản phẩm thành công" })
-      }
-
-    } catch (error) {
-      console.log("error", error)
-      messageErrorDefault({ message: "Kiểm tra lại kết nối." })
-
-    }
-
-  }
-
-  const add = () => {
-    setIdSelected(null)
-    setMode(FORM_MODE.NEW)
-    setOpenInfo(true)
-  }
-
+  
   const reloadData = () => {
-    getPayments(1)
+    getConnections(1)
     setOpenInfo(false)
   }
 
   return (
-    <Content loading={false}>
+    <Content loading={loading}>
       <>
         <br />
         <div className="mx-1.5">
-          <Typography.Title level={4} >Quản lý thanh toán</Typography.Title>
+          <Typography.Title level={4} >Quản lý kết nối</Typography.Title>
         </div>
 
-        {/* <ProductSearchForm
+        <ConnectsSearchForm
           form={form}
-          categorysOption={categorysOption}
           onSearch={searchProducts}
           onReset={resetSearch}
-          onInfo={() => add()} /> */}
+           />
         {/* <ProductInfoForm
           id={idSelected}
           mode={mode}
@@ -146,15 +129,6 @@ const PaymentPage = () => {
               setIdSelected(record.id)
             },
             actionXoa: (record: Payment) => {
-              confirm({
-                title: 'Xác nhận',
-                content: 'Bạn chắc chắn muốn hủy thanh toán?',
-                okText: 'Hủy thanh toán',
-                cancelText: 'Quay lại',
-                onOk(){
-                  deletePayment(record.paymentId || 0)
-                },
-              })
               
             },
           })}
@@ -168,7 +142,7 @@ const PaymentPage = () => {
               pageSize={pageSize}
               setPageSize={setPageSize}
               pageIndex={pageIndex}
-              setPageIndex={getPayments}
+              setPageIndex={getConnections}
             />
           )}
         </div>
@@ -177,4 +151,4 @@ const PaymentPage = () => {
   )
 }
 
-export default PaymentPage
+export default ConnectionsPage

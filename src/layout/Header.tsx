@@ -1,5 +1,5 @@
-import { Modal } from 'antd'
-import { useUserActions } from 'actions/user.action'
+import { Dropdown, MenuProps, Modal, Space } from 'antd'
+import { DeleteOutlined, DownOutlined, EditOutlined } from '@ant-design/icons'
 import Avatar from 'assets/icons/Avatar.svg'
 import { memo, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -7,12 +7,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from 'store'
 import { jwtDecode } from 'jwt-decode'
 import { setUserInfo } from 'Slice/userSlice'
+import PopoverAction from 'components/atoms/PopoverAction'
+import { ROLE } from 'utils/Constants'
+import ChangePassword from './ChangePassword'
 const { confirm } = Modal;
 
 const HeaderMain = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const userInfo = useSelector((state: RootState) => state.userReducer.userInfo);
+  const [openChange, setOpenChange] = useState(false);
 
   const showConfirm = () => {
     confirm({
@@ -32,6 +36,7 @@ const HeaderMain = () => {
   }
 
   useEffect(() => {
+    console.log("userInfo", userInfo)
     getUserDetail()
   }, [])
 
@@ -46,6 +51,27 @@ const HeaderMain = () => {
     }
   }
 
+  const items: MenuProps['items'] = [
+    {
+      label: (
+        <a onClick={()=> setOpenChange(true)}>
+          Đổi mật khẩu
+        </a>
+      ),
+      key: '0',
+    },
+    {
+      type: 'divider',
+    },
+    {
+      label: (
+        <a onClick={showConfirm}>
+          Đăng xuất
+        </a>
+      ),
+      key: '1',
+    }
+  ];
 
   return (
     <header
@@ -63,20 +89,32 @@ const HeaderMain = () => {
             </a>
           </div>
         </div>
-        <div className="flex relative space-x-[10px] pr-10" onClick={showConfirm}>
+        <div className="flex relative space-x-[10px] pr-10" >
           <div className="flex space-x-[10px]">
             <img src={Avatar} alt="Avatar" />
           </div>
           <div className="profile flex h-[40px] cursor-pointer">
             <div className="flex-col text-[14px] text-white hidden lg:flex flex justify-center">
               <div className="font-bold" style={{ color: '#ffffff' }}>
-                {userInfo?.Username} {userInfo?.FullName}
+                <Dropdown menu={{ items }}>
+                  <a>
+                    <Space>
+                      {userInfo?.Username} {ROLE[userInfo?.RoleId]}
+                      <DownOutlined />
+                    </Space>
+                  </a>
+                </Dropdown>
+
               </div>
             </div>
           </div>
           <div className="flex space-x-[10px] cursor-pointer" >
           </div>
         </div>
+        <ChangePassword
+          open={openChange}
+          username={userInfo?.Username}
+          handleCancel={() => setOpenChange(false)} />
       </div>
     </header>
   )

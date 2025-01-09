@@ -11,8 +11,9 @@ import {
 } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import { DefaultOptionType } from 'antd/lib/select'
+import Content from 'layout/Content'
 import { Store } from 'models/Store.model'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { messageSuccessDefault } from 'utils/CommonFc'
 import { messageType, FORM_MODE } from 'utils/Constants'
 
@@ -34,6 +35,7 @@ const StoreInfoForm: React.FC<CategoryInfoFormProps> = ({
 }) => {
   const [form] = Form.useForm();
   const storeActions = useStoreActions();
+  const [loadingInfo,setLoadingInfo] = useState<boolean>(false)
 
   useEffect(() => {
     form.resetFields()
@@ -60,6 +62,7 @@ const StoreInfoForm: React.FC<CategoryInfoFormProps> = ({
 
       const values = await form.validateFields()
       if (values) {
+        setLoadingInfo(true)
         if (data) {
           const body = {
             storeId: data.storeId,
@@ -78,6 +81,7 @@ const StoreInfoForm: React.FC<CategoryInfoFormProps> = ({
 
   const addStore = async (body: Store) => {
     const response: Store = await storeActions.addStore(body);
+    setLoadingInfo(false)
     if (response) {
       messageSuccessDefault({ message: messageType.ADD_SUCCESS })
       if (reload) reload()
@@ -86,82 +90,94 @@ const StoreInfoForm: React.FC<CategoryInfoFormProps> = ({
 
   const updateStore = async (body: Store) => {
     const response: Store = await storeActions.updateStore(body);
+    setLoadingInfo(false)
     if (response) {
       messageSuccessDefault({ message: messageType.UPDATE_SUCCESS })
       if (reload) reload()
     }
   }
 
+  const regex = /^(0)([0-9]{9})$/
+
   return (
-    <Modal
-      title={mode === FORM_MODE.NEW ? 'Thêm mới cửa hàng' : 'Cập nhật thông tin cửa hàng'}
-      centered
-      footer={[
-        <div className="flex-center w-full gap-3">
-          {
-            mode !== FORM_MODE.VIEW && <Button
+    <Content loading={loadingInfo}>
+      <Modal
+        title={mode === FORM_MODE.NEW ? 'Thêm mới cửa hàng' : 'Cập nhật thông tin cửa hàng'}
+        centered
+        footer={[
+          <div className="flex-center w-full gap-3">
+            {
+              mode !== FORM_MODE.VIEW && <Button
+                onClick={() => {
+                  handleSubmit()
+                }}
+                className="w-[144px] min-h-[40px]"
+              >
+                {mode === FORM_MODE.NEW ? 'Thêm mới' : 'Cập nhật'}
+              </Button>
+            }
+            <Button
               onClick={() => {
-                handleSubmit()
+                handleCancel()
               }}
               className="w-[144px] min-h-[40px]"
             >
-              {mode === FORM_MODE.NEW ? 'Thêm mới' : 'Cập nhật'}
+              Thoát
             </Button>
-          }
-          <Button
-            onClick={() => {
-              handleCancel()
-            }}
-            className="w-[144px] min-h-[40px]"
-          >
-            Thoát
-          </Button>
-        </div>,
-      ]}
-      onCancel={handleCancel}
-      className="!w-[95%]"
-      {...props}
-    >
-      <Form className="mt-10" form={form} labelWrap disabled={mode === FORM_MODE.VIEW} labelAlign="right">
-        <Row className="justify-between">
-          <Col span={12}>
-            <Form.Item
-              label="Store Name"
-              name="storeName"
-              rules={[{ required: true, message: 'Store name is require' }]}
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 16 }}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              label="Address"
-              name="address"
-              rules={[{ required: true, message: 'Address is require' }]}
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 16 }}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row className="justify-between">
-          <Col span={12}>
-            <Form.Item
-              label="Phone"
-              name="phoneNumber"
-              rules={[{ required: true, message: 'Phone is require' }]}
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 16 }}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row>
-      </Form>
-    </Modal>
+          </div>,
+        ]}
+        onCancel={handleCancel}
+        className="!w-[95%]"
+        {...props}
+      >
+        <Form className="mt-10" form={form} labelWrap disabled={mode === FORM_MODE.VIEW} labelAlign="right">
+          <Row className="justify-between">
+            <Col span={12}>
+              <Form.Item
+                label="Tên cửa hàng"
+                name="storeName"
+                rules={[{ required: true, message: 'Không được để trống' }]}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 16 }}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Địa chỉ"
+                name="address"
+                rules={[{ required: true, message: 'Không được để trống' }]}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 16 }}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row className="justify-between">
+            <Col span={12}>
+              <Form.Item
+                label="Số điện thoại"
+                name="phoneNumber"
+                rules={[
+                  { required: true, message: 'Không được để trống' },
+                  {
+                    pattern: new RegExp(regex),
+                    message: 'Số điện thoại không hợp lệ!',
+                  }
+                ]}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 16 }}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </Modal>
+    </Content>
+
   )
 }
 

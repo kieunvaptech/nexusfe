@@ -50,16 +50,10 @@ const Login = () => {
   })
 
   const handleLogin = async () => {
-    // navigate('/')
     try {
       const data = form.getFieldsValue()
-
-      const body = {
-        ...data,
-        role_id: 2
-      }
+      setLoading(true)
       const token = await userActions.login(data);
-      console.log("loginResponse", token)
       if (token) {
         const decoded = jwtDecode<any>(token);
         const decodedData = JSON.parse(decoded?.Employee);
@@ -100,65 +94,6 @@ const Login = () => {
           verticalAlign: 'middle',
         }}
       >
-        {/* <div className="login w-screen h-screen flex-center bg-[url('assets/images/background-login.png')]">
-          <div className="container w-[430px] px-[25px] py-5 min-h-[366px] bg-white rounded-2xl">
-            
-            <div className="body mt-[10px]">
-              <p className="leading-[38px] flex-center text-[#444] text-[22px] font-[500] mb-[10px]">ĐĂNG NHẬP</p>
-              <div className="form-login mt-[12px]">
-                <div className="flex flex-col gap-3">
-                  <div className="flex flex-col gap-2">
-                    <label htmlFor="phone_number" className="font-bold">
-                      Tên đăng nhập
-                    </label>
-                    <input
-                      {...register('phone_number')}
-                      type="text"
-                      id="phone_number"
-                      placeholder="Tài khoản"
-                      className="text-truncate"
-                      onKeyDown={handleKeyDown}
-                    />
-                    <ErrorMessage message={errors?.phone_number?.message} />
-                  </div>
-                  <div className="flex flex-col gap-2 mb-[20px]">
-                    <label htmlFor="password" className="font-bold">
-                      Mật khẩu
-                    </label>
-                    <div className="relative">
-                      <input
-                        {...register('password')}
-                        type={showPassword ? 'text' : 'password'}
-                        id="password"
-                        placeholder="Mật khẩu"
-                        className="text-truncate"
-                        onKeyDown={handleKeyDown}
-                      />
-                      <div
-                        className="absolute top-[30%] right-[5%] cursor-pointer"
-                        onClick={() => setShowPassword((prev) => !prev)}
-                      >
-                        {showPassword ? (
-                          <EyeOutlined className="text-lg" />
-                        ) : (
-                          <EyeInvisibleOutlined className="text-lg" />
-                        )}
-                      </div>
-                    </div>
-                    <ErrorMessage message={errors?.password?.message} />
-                  </div>
-                  <Button
-                    onClick={handleSubmit(handleLogin)}
-                    type={BUTTON_TYPES.PRIMARY}
-                    className="w-[250px] mx-auto min-h-[40px] !rounded-lg"
-                  >
-                    Đăng nhập
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> */}
         <div
           className="flex-center h-screen w-full bg-cover bg-center bg-[url('assets/images/background-login.png')]"
         >

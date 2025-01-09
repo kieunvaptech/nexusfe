@@ -69,11 +69,11 @@ export const ProductColumns = (props: Props) => {
                 return (
                     <PopoverAction
                         listAction={[
-                            {
-                                icon: <img src={DetailIcon} alt="view-detail-icon" />,
-                                text: ACTION_TYPE.XEM,
-                                action: () => actionXem(record),
-                            },
+                            // {
+                            //     icon: <img src={DetailIcon} alt="view-detail-icon" />,
+                            //     text: ACTION_TYPE.XEM,
+                            //     action: () => actionXem(record),
+                            // },
                             {
                                 icon: <EditOutlined className="text-xl text-gray-400" />,
                                 text: ACTION_TYPE.CAP_NHAT,

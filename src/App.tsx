@@ -16,6 +16,7 @@ import EmployeePage from 'page/Employees/index'
 import SupplierPage from 'page/Suppliers/index'
 import DevicePage from 'page/Device'
 import ConnectionPage from 'page/Connection'
+import ConnectionsPage from 'page/Connections'
 
 interface PrivateRouteProps {
   children: ReactNode
@@ -47,6 +48,7 @@ function App() {
       >
         <Route index element={<Dashboard />} />
 
+        <Route path="/ket-noi" element={<ConnectionsPage />} />
         <Route path="/thanh-toan" element={<PaymentPage />} />
         <Route path="/don-hang" element={<OrderPage />} />
         <Route path="/khach-hang" element={<CustomerPage />} />

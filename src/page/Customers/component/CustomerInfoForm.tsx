@@ -115,6 +115,8 @@ const CustomerInfoForm: React.FC<FormProps> = ({
     if (mode === FORM_MODE.UPDATE) return 'Cập nhật thông tin khách hàng'
     if (mode === FORM_MODE.VIEW) return 'Chi tiết thông tin khách hàng'
   }
+  
+  const regex = /^(0)([0-9]{9})$/
 
   return (
     <Modal
@@ -163,7 +165,13 @@ const CustomerInfoForm: React.FC<FormProps> = ({
             <Form.Item
               label="Email"
               name="email"
-              rules={[{ required: true, message: 'Email không được để trống' }]}
+              rules={[
+                {
+                  type: 'email',
+                  message: 'Email không hợp lệ',
+                },          
+                { required: true, message: 'Email không được để trống' }
+              ]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
@@ -176,13 +184,23 @@ const CustomerInfoForm: React.FC<FormProps> = ({
             <Form.Item
               label="Số điện thoại"
               name="phoneNumber"
-              rules={[{ required: true, message: 'Đơn vị quản lý không được để trống' }]}
+              rules={[
+                {
+                  required: true,
+                  message: 'Số điện thoại không được để trống.',
+                },
+                {
+                  pattern: new RegExp(regex),
+                  message: 'Số điện thoại không hợp lệ!',
+                }
+              ]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
-              <Input />
+              <Input maxLength={10} placeholder='Nhập số điện thoại' />
             </Form.Item>
           </Col>
+
           <Col span={11}>
             <Form.Item
               label="Địa chỉ"

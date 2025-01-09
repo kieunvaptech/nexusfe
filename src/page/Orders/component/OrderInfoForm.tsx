@@ -92,7 +92,7 @@ const OrderInfoForm: React.FC<OrderInfoFormProps> = ({
           phoneNumber: response?.customer?.phoneNumber,
           email: response?.customer?.email,
           address: response?.customer?.address,
-          employeeFullName: userInfo?.FullName,
+          employeeFullName: response?.employee?.fullName || userInfo?.FullName,
           statusName: STATUS[response?.status]
         });
         const orderDetails = response?.orderDetails.map((item: any) => ({

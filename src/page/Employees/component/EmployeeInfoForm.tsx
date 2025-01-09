@@ -74,11 +74,11 @@ const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
           }
           updateEmployee(body)
         }
-        else{
+        else {
           // if(values.password) values.passwordHash = CryptoJS.SHA256(values.password).toString(CryptoJS.enc.Hex);
           addEmployee(values)
         }
-          
+
 
       }
     } catch (errInfo) {
@@ -123,6 +123,8 @@ const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
     if (mode === FORM_MODE.UPDATE) return 'Cập nhật thông tin nhân viên'
     if (mode === FORM_MODE.VIEW) return 'Xem chi tiết thông tin nhân viên'
   }
+
+  const regex = /^(0)([0-9]{9})$/
 
   return (
     <Modal
@@ -171,7 +173,10 @@ const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
             <Form.Item
               label="Email"
               name="email"
-              rules={[{ required: true, message: 'Email không được để trống' }]}
+              rules={[{
+                type: 'email',
+                message: 'Email không hợp lệ',
+              }, { required: true, message: 'Email không được để trống' }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
@@ -184,7 +189,11 @@ const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
             <Form.Item
               label="Số điện thoại"
               name="phoneNumber"
-              rules={[{ required: true, message: 'Số điện thoại không được để trống' }]}
+              rules={[{ required: true, message: 'Số điện thoại không được để trống' },
+              {
+                pattern: new RegExp(regex),
+                message: 'Số điện thoại không hợp lệ!',
+              }]}
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
@@ -224,7 +233,7 @@ const EmployeeInfoForm: React.FC<ProductInfoFormProps> = ({
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
             >
-              <Input />
+              <Input.Password />
             </Form.Item>
           </Col>
         </Row>
